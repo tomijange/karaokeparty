@@ -37,6 +37,6 @@ export default class Home extends Vue {
     height: 100%;
     width: 100%;
     box-sizing: border-box;
-    padding: 8px;
+    padding: 18px;
   }
 </style>
