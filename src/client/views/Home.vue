@@ -1,13 +1,17 @@
 <template>
   <div class="home">
-    <p>
-      Hallo patty
-    </p>
-    <c-text-input id="textInput1" label-text="Username" class="username-input"></c-text-input>
+    <c-card class="welcome-card">
+      <h1>Welcome to Karaokeparty🎤</h1>
 
-    <p>{{ text }}</p>
+      <c-text-input id="textInput1" label-text="Username" class="username-input ma-4"></c-text-input>
 
-    <c-button>Test</c-button>
+      <c-button color="#607D8B" class="ma-4" @click="onCreateGame">Create Game 🌍</c-button>
+    </c-card>
+    <c-card class="welcome-card-join">
+      <h1>Enter a code</h1>
+        <c-code-input></c-code-input>
+      <c-button color="#607D8B" class="ma-4">Join Game ☝🏼</c-button>
+    </c-card>
   </div>
 </template>
 
@@ -15,13 +19,15 @@
 import { Component, Vue } from 'vue-property-decorator';
 import CButton from "@/client/components/CButton.vue";
 import CTextInput from "@/client/components/CTextInput.vue";
+import CCard from "@/client/components/CCard.vue";
+import CCodeInput from "@/client/components/CCodeInput.vue";
 
 @Component({
-  components: { CTextInput, CButton },
+  components: {CCodeInput, CCard, CTextInput, CButton },
 })
 export default class Home extends Vue {
 
-  text = 'Hallo wie gehts';
+  text = 'Hallo Patty';
 
 
   onTextChange(e: any) {
@@ -37,12 +43,27 @@ export default class Home extends Vue {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  padding: 8px;
+  padding: 64px;
 }
 
 .username-input label {
-  background-color: #3a9f5c;
+  background-color: #919191;
   color: #fff;
+}
+
+.welcome-card, .welcome-card-join {
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.welcome-card-join {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-card-join button {
+  width: fit-content;
 }
 
 </style>
