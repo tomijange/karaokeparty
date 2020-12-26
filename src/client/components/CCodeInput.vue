@@ -3,7 +3,6 @@
 </template>
 
 
-
 <style scoped lang="scss">
 
 .codeInput {

@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+
     <c-card class="welcome-card">
       <h1>Welcome to Karaokeparty🎤</h1>
 
@@ -7,11 +8,15 @@
 
       <c-button color="#607D8B" class="ma-4" @click="onCreateGame">Create Game 🌍</c-button>
     </c-card>
+
     <c-card class="welcome-card-join">
       <h1>Enter a code</h1>
-        <c-code-input></c-code-input>
+
+      <c-code-input></c-code-input>
+
       <c-button color="#607D8B" class="ma-4">Join Game ☝🏼</c-button>
     </c-card>
+
   </div>
 </template>
 
@@ -27,13 +32,10 @@ import CCodeInput from "@/client/components/CCodeInput.vue";
 })
 export default class Home extends Vue {
 
-  text = 'Hallo Patty';
-
-
-  onTextChange(e: any) {
-    console.log(e);
-    this.text = e.target?.value;
+  onCreateGame() {
+    this.$router.push('game-lobby');
   }
+
 }
 </script>
 
