@@ -3,7 +3,7 @@
     <p>
       Hallo patty
     </p>
-    <c-text-input ></c-text-input>
+    <c-text-input id="textInput1" label-text="Username" class="username-input"></c-text-input>
 
     <p>{{ text }}</p>
 
@@ -31,12 +31,18 @@ export default class Home extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-  .home {
-    background: radial-gradient(#ffffff, #eeeeee);
-    height: 100%;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 18px;
-  }
+<style lang="scss">
+.home {
+  background: radial-gradient(#ffffff, #eeeeee);
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+}
+
+.username-input label {
+  background-color: #3a9f5c;
+  color: #fff;
+}
+
 </style>

@@ -2,6 +2,15 @@
   <router-view/>
 </template>
 
+<script>
+import './global.scss';
+import {Component, Vue} from "vue-property-decorator";
+@Component
+export default class App extends Vue{
+
+}
+</script>
+
 <style>
 body, html {
   height: 100%;
