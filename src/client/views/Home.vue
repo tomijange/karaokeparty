@@ -3,7 +3,7 @@
     <p>
       Hallo patty
     </p>
-      <c-text-input ></c-text-input>
+    <c-text-input ></c-text-input>
 
     <p>{{ text }}</p>
 
@@ -32,14 +32,11 @@ export default class Home extends Vue {
 </script>
 
 <style scoped lang="scss">
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
   .home {
-    background-color: #f1f1f1;
-    padding: 20px;
+    background: radial-gradient(#ffffff, #eeeeee);
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
   }
 </style>
