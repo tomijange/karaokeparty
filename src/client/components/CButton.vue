@@ -1,14 +1,21 @@
 <template>
-  <button class="button">
+  <button v-bind="$attrs" v-on="$listeners" class="button" :style="{ '--color': color }">
     <slot></slot>
   </button>
 </template>
 
 <script>
 
-import {Component, Prop, Vue} from "vue-property-decorator";
+import {Component, Vue} from "vue-property-decorator";
 
-@Component({})
+@Component({
+  props: {
+    color: {
+      type: String,
+      default: 'red',
+    }
+  }
+})
 export default class CButton extends Vue {
 
 }
@@ -18,23 +25,25 @@ export default class CButton extends Vue {
 <style scoped lang="scss">
 
 .button {
-  background-color: #3a9f5c;
+  background-color: var(--color);
   border: none;
-  color: white;
+  color: rgb(239, 239, 239);
+  letter-spacing: 2px;
   font-size: 1rem;
   outline: none;
-  padding: 4px 8px;
-  box-shadow: 1px 1px 10px 0px #4caf506e;
+  border-radius: 4px;
+  padding: 8px 16px;
+  box-shadow: 1px 1px 5px 0 var(--color);
   transition: box-shadow .3s;
+  cursor: pointer;
 }
 
 .button:hover {
-  box-shadow: 1px 1px 15px 1px #4caf506e;
+  box-shadow: 1px 1px 8px 1px var(--color);
 }
 
 .button:active {
-  box-shadow: 1px 1px 15px 5px #4caf506e;
-  outline: 1px solid blue;
+  box-shadow: 1px 1px 2px 1px var(--color);
 
 }
 

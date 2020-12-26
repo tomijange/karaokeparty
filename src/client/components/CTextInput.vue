@@ -1,7 +1,7 @@
 <template>
   <div class="input">
     <label :for="id">{{ labelText }}</label>
-    <input :id="id" v-bind="$attrs" type="text" placeholder="Enter your username" @keydown="e => $emit('input', e.target.value)"/>
+    <input :id="id" v-bind="$attrs" type="text" placeholder="Enter your username" @keydown="onInput"/>
 
   </div>
 </template>
@@ -14,8 +14,9 @@ import {Component, Prop, Vue} from "vue-property-decorator";
   props: ["id", "labelText"]
 })
 export default class CTextInput extends Vue {
-
-
+  onInput(e) {
+    this.$emit('input', e.target.value);
+  }
 }
 
 </script>
@@ -24,22 +25,25 @@ export default class CTextInput extends Vue {
 
 .input {
   display: flex;
-  flex-direction: column;
-  box-shadow: 0 0 1px #3a9f5c;
+  flex-direction: row;
+  box-shadow: 0 0 5px 1px #d7d7d7;
   background-color: #fff;
 }
 
 .input input {
-  padding: 3px;
+  margin: 8px;
+  padding: 0;
   outline: none;
   border: none;
   border-radius: inherit;
   font-size: 1rem;
   background-color: inherit;
+  width: 100%;
+
 }
 
 .input label {
-  padding: 3px;
+  padding: 8px;
 }
 
 .input input:active {

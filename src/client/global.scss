@@ -1,3 +1,15 @@
 * {
-  font-family: 'Roboto';
+  font-family: 'Roboto', serif;
+}
+
+h1, h2, h3, h4, h6, p {
+  margin-top: 0;
+}
+
+.pa-4 {
+  padding: 16px;
+}
+
+.ma-4 {
+  margin: 16px;
 }

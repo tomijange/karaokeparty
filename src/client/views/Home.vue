@@ -1,13 +1,15 @@
 <template>
   <div class="home">
-    <p>
-      Hallo patty
-    </p>
-    <c-text-input id="textInput1" label-text="Username" class="username-input"></c-text-input>
 
-    <p>{{ text }}</p>
+    <c-card class="welcome-card">
+      <h1>Welcome to Karaokeparty🎤</h1>
 
-    <c-button>Test</c-button>
+      <c-text-input id="textInput1" label-text="Username" class="username-input ma-4"></c-text-input>
+
+      <c-button color="#607D8B" class="ma-4" @click="onCreateGame">Create Game 🌍</c-button>
+    </c-card>
+
+
   </div>
 </template>
 
@@ -15,19 +17,17 @@
 import { Component, Vue } from 'vue-property-decorator';
 import CButton from "@/client/components/CButton.vue";
 import CTextInput from "@/client/components/CTextInput.vue";
+import CCard from "@/client/components/CCard.vue";
 
 @Component({
-  components: { CTextInput, CButton },
+  components: { CCard, CTextInput, CButton },
 })
 export default class Home extends Vue {
 
-  text = 'Hallo wie gehts';
-
-
-  onTextChange(e: any) {
-    console.log(e);
-    this.text = e.target?.value;
+  onCreateGame() {
+    this.$router.push('game-lobby');
   }
+
 }
 </script>
 
@@ -37,12 +37,17 @@ export default class Home extends Vue {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  padding: 8px;
+  padding: 64px;
 }
 
 .username-input label {
-  background-color: #3a9f5c;
+  background-color: #919191;
   color: #fff;
+}
+
+.welcome-card {
+  margin: 0 auto;
+  max-width: 800px;
 }
 
 </style>
