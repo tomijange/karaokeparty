@@ -40,6 +40,6 @@ export default class Home extends Vue {
 
   .home {
     background-color: #f1f1f1;
-    padding: 10px;
+    padding: 20px;
   }
 </style>
