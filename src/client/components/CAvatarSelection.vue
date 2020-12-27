@@ -1,16 +1,25 @@
 <template>
   <div class="avatar pa-4">
 
-    <c-avatar-parts :avatar-parts="this.heads" v-model="selectedHead"></c-avatar-parts>
+    <div class="avatar-selection">
 
-    <c-avatar-parts :avatar-parts="this.bodies" v-model="selectedBody"></c-avatar-parts>
+      <c-avatar-parts
+          :avatar-parts="this.heads"
+          v-model="selectedHead">
+      </c-avatar-parts>
 
-    <ul>
-      <li>{{ selectedHead }}</li>
-    </ul>
-    <ul>
-      <li>{{ selectedBody }}</li>
-    </ul>
+      <c-avatar-parts
+          :avatar-parts="this.bodies"
+          v-model="selectedBody">
+      </c-avatar-parts>
+
+    </div>
+
+    <div class="final-avatar ml-15">
+      <ul>
+        <li>  <span>{{ selectedHead }}  {{ selectedBody }}  </span>  </li>
+      </ul>
+    </div>
 
   </div>
 </template>
@@ -25,8 +34,8 @@ import CAvatarParts from "@/client/components/CAvatarParts";
 })
 
 export default class CAvatar extends Vue {
-  heads = ['🙂', '😉', '😲', '😄', '🥴'];
-  bodies = ['👔', '🩱', '🥼', '👗', '👕'];
+  heads = ['🙂', '😉', '😲', '😄', '🥴', '🥰'];
+  bodies = ['👔', '🩱', '🥼', '👗', '👕', '🦺'];
   selectedHead = '🙂';
   selectedBody = '👔';
 }
@@ -37,12 +46,18 @@ export default class CAvatar extends Vue {
 
 .avatar {
   box-shadow: 0 0 10px #919191;
+  display: flex;
+  flex-direction: row;
 }
-.avatar ul {
+.avatar-selection, .final-avatar ul {
+  display: flex;
+  flex-direction: column;
+}
+.avatar-selection ul, .final-avatar ul {
   padding: 0;
   margin: 0;
 }
-.avatar li {
+.avatar-selection li, .final-avatar li {
   cursor: pointer;
   margin: 2px;
   list-style: none;
@@ -55,7 +70,13 @@ export default class CAvatar extends Vue {
   background-color: white;
   transition: background-color 0.2s;
 }
-.avatar li span {
+.final-avatar li {
+  cursor: default;
+  height: 104px;
+  display: flex;
+  flex-direction: column;
+}
+.avatar-selection li span, .final-avatar li span {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,6 +85,9 @@ export default class CAvatar extends Vue {
   font-size: 1.4rem;
   background-color: inherit;
   user-select: none;
+}
+.final-avatar li span {
+  font-size: 1.6rem;
 }
 
 </style>
