@@ -2,7 +2,6 @@
   <div class="input">
     <label :for="id">{{ labelText }}</label>
     <input :id="id" v-bind="$attrs" type="text" placeholder="Enter your username" @keydown="onInput"/>
-
   </div>
 </template>
 

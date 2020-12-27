@@ -18,9 +18,7 @@
     </c-card>
 
     <c-card class="avatar-card">
-      <c-avatar></c-avatar>
-      <c-button color="#607D8B" class="ma-4" @click="saveAvatar">Save Avatar</c-button>
-      <c-final-avatar></c-final-avatar>
+      <c-avatar-selection></c-avatar-selection>
     </c-card>
 
   </div>
@@ -32,21 +30,15 @@ import CButton from "@/client/components/CButton.vue";
 import CTextInput from "@/client/components/CTextInput.vue";
 import CCard from "@/client/components/CCard.vue";
 import CCodeInput from "@/client/components/CCodeInput.vue";
-import CAvatar from "@/client/components/CAvatar.vue";
-import CFinalAvatar from "@/client/components/CFinalAvatar.vue";
+import CAvatarSelection from "@/client/components/CAvatarSelection.vue";
 
 @Component({
-  components: {CFinalAvatar, CAvatar, CCodeInput, CCard, CTextInput, CButton },
+  components: { CAvatarSelection, CCodeInput, CCard, CTextInput, CButton },
 })
 export default class Home extends Vue {
 
   onCreateGame() {
     this.$router.push('game-lobby');
-  }
-
-  saveAvatar() {
-    document.getElementById("finalhead").innerHTML = document.getElementsByClassName("finalhead")[0].innerHTML;
-    document.getElementById("finalbody").innerHTML = document.getElementsByClassName("finalbody")[0].innerHTML;
   }
 }
 </script>
