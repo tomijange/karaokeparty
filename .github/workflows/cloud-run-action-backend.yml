@@ -1,4 +1,4 @@
-name: publish-backend
+name: publish
 
 on: [push]
 

@@ -1,4 +1,4 @@
-name: publish-frontend
+name: publish
 
 on: [push]
 
