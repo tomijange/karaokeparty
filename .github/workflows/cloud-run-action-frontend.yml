@@ -12,7 +12,10 @@ jobs:
         uses: actions/checkout@master
 
       - name: Branch name
-        run: echo running on branch ${GITHUB_REF##*/}
+        shell: bash
+        id: extract_branch
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+
 
       - name: Setup GCP Service Account
         uses: google-github-actions/setup-gcloud@master
@@ -28,16 +31,16 @@ jobs:
       
       - name: Build
         run: |
-          docker build -t gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${{  github.sha }} -f docker/frontend.Dockerfile .
+          docker build -t gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${{ steps.extract_branch.outputs.branch }} -f docker/frontend.Dockerfile .
 
       - name: Push
         run: |
-          docker push gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${{  github.sha }}
+          docker push gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${{ steps.extract_branch.outputs.branch }}
 
       - name: Deploy
         id: deploy
         uses: google-github-actions/deploy-cloudrun@main
         with:
-          image: gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${{  github.sha }}
-          service: karaokeparty-frontend
+          image: gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${{ steps.extract_branch.outputs.branch }}
+          service: karaokeparty-frontend-${{ steps.extract_branch.outputs.branch }}
 
