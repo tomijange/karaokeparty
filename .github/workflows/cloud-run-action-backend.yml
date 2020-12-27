@@ -1,10 +1,10 @@
-name: publish-frontend
+name: publish-backend
 
 on: [push]
 
 jobs:
   build:
-    name: Cloud Run Deployment Frontend
+    name: Cloud Run Deployment Backend
     runs-on: ubuntu-latest
     steps:
 
@@ -31,16 +31,16 @@ jobs:
       
       - name: Build
         run: |
-          docker build -t gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${{ steps.extract_branch.outputs.branch }} -f docker/frontend.Dockerfile .
+          docker build -t gcr.io/${{ env.GCLOUD_PROJECT }}/backend:${{ steps.extract_branch.outputs.branch }} -f docker/backend.Dockerfile .
 
       - name: Push
         run: |
-          docker push gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${{ steps.extract_branch.outputs.branch }}
+          docker push gcr.io/${{ env.GCLOUD_PROJECT }}/backend:${{ steps.extract_branch.outputs.branch }}
 
       - name: Deploy
         id: deploy
         uses: google-github-actions/deploy-cloudrun@main
         with:
-          image: gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${{ steps.extract_branch.outputs.branch }}
-          service: karaokeparty-frontend-${{ steps.extract_branch.outputs.branch }}
+          image: gcr.io/${{ env.GCLOUD_PROJECT }}/backend:${{ steps.extract_branch.outputs.branch }}
+          service: karaokeparty-backend-${{ steps.extract_branch.outputs.branch }}
 

@@ -25,6 +25,6 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello world</h1>');
 });
 
-httpServer.listen(3000, () => {
-  console.log('listening on *:3000 💻');
+httpServer.listen(process.env.PORT || 3000, () => {
+  console.log('listening on *:' + process.env.PORT + '💻');
 });

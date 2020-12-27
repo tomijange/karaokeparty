@@ -6,7 +6,8 @@
     "server": "nodemon",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build:server": "rimraf build/ && tsc && tscpaths -p tsconfig.json -s ./src -o ./build"
   },
   "dependencies": {
     "@types/debug": "^4.1.5",
@@ -24,6 +25,7 @@
     "socket.io": "^3.0.4",
     "socket.io-client": "^3.0.4",
     "ts-node": "^9.1.1",
+    "tscpaths": "^0.0.9",
     "typesafe-vuex": "^3.2.2",
     "uuid": "^8.3.2",
     "vue": "^2.6.11",
