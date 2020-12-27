@@ -28,7 +28,7 @@ jobs:
       
       - name: Build
         run: |
-          docker build -t gcr.io/${GCLOUD_PROJECT}/frontend:${GITHUB_REF##*/} .
+          docker build -t gcr.io/${GCLOUD_PROJECT}/frontend:${GITHUB_REF##*/} -f docker/frontend.Dockerfile .
 
       - name: Push
         run: |
