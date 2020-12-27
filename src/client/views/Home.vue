@@ -4,9 +4,8 @@
     <c-card class="welcome-card">
       <h1>Welcome to Karaokeparty🎤</h1>
 
-      <c-text-input id="textInput1" label-text="Username" class="username-input ma-4"></c-text-input>
 
-      <c-button color="#607D8B" class="ma-4" @click="onCreateGame">Create Game 🌍</c-button>
+      <c-button color="#607D8B" class="m-4" @click="onCreateGame">Create Game 🌍</c-button>
     </c-card>
 
     <c-card class="welcome-card-join">
@@ -14,13 +13,12 @@
 
       <c-code-input></c-code-input>
 
-      <c-button color="#607D8B" class="ma-4">Join Game ☝🏼</c-button>
+      <c-button color="#607D8B" class="m-4">Join Game ☝🏼</c-button>
     </c-card>
 
     <c-card class="avatar-card">
       <c-avatar-selection></c-avatar-selection>
     </c-card>
-
   </div>
 </template>
 
@@ -31,6 +29,8 @@ import CTextInput from "@/client/components/CTextInput.vue";
 import CCard from "@/client/components/CCard.vue";
 import CCodeInput from "@/client/components/CCodeInput.vue";
 import CAvatarSelection from "@/client/components/CAvatarSelection.vue";
+import { EventMessages } from "@/shared/game/messages";
+import { readError, readMe } from "@/client/store/main/getters";
 
 @Component({
   components: { CAvatarSelection, CCodeInput, CCard, CTextInput, CButton },
@@ -38,7 +38,15 @@ import CAvatarSelection from "@/client/components/CAvatarSelection.vue";
 export default class Home extends Vue {
 
   onCreateGame() {
-    this.$router.push('game-lobby');
+    this.$socket.emit(EventMessages.CreateMatch);
+  }
+
+  get error() {
+    return readError(this.$store);
+  }
+
+  get me() {
+    return readMe(this.$store);
   }
 }
 </script>

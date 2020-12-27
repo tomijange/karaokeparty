@@ -1,13 +1,12 @@
 <template>
-  <router-view/>
+  <router-view />
 </template>
 
 <script>
 import './global.scss';
 import {Component, Vue} from "vue-property-decorator";
 @Component
-export default class App extends Vue{
-
+export default class App extends Vue {
 }
 </script>
 
