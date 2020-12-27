@@ -17,6 +17,12 @@
       <c-button color="#607D8B" class="ma-4">Join Game ☝🏼</c-button>
     </c-card>
 
+    <c-card class="avatar-card">
+      <c-avatar></c-avatar>
+      <c-button color="#607D8B" class="ma-4" @click="saveAvatar">Save Avatar</c-button>
+      <c-final-avatar></c-final-avatar>
+    </c-card>
+
   </div>
 </template>
 
@@ -26,9 +32,11 @@ import CButton from "@/client/components/CButton.vue";
 import CTextInput from "@/client/components/CTextInput.vue";
 import CCard from "@/client/components/CCard.vue";
 import CCodeInput from "@/client/components/CCodeInput.vue";
+import CAvatar from "@/client/components/CAvatar.vue";
+import CFinalAvatar from "@/client/components/CFinalAvatar.vue";
 
 @Component({
-  components: {CCodeInput, CCard, CTextInput, CButton },
+  components: {CFinalAvatar, CAvatar, CCodeInput, CCard, CTextInput, CButton },
 })
 export default class Home extends Vue {
 
@@ -36,6 +44,10 @@ export default class Home extends Vue {
     this.$router.push('game-lobby');
   }
 
+  saveAvatar() {
+    document.getElementById("finalhead").innerHTML = document.getElementsByClassName("finalhead")[0].innerHTML;
+    document.getElementById("finalbody").innerHTML = document.getElementsByClassName("finalbody")[0].innerHTML;
+  }
 }
 </script>
 
@@ -53,7 +65,7 @@ export default class Home extends Vue {
   color: #fff;
 }
 
-.welcome-card, .welcome-card-join {
+.welcome-card, .welcome-card-join, .avatar-card {
   margin: 0 auto;
   max-width: 800px;
 }
@@ -62,6 +74,20 @@ export default class Home extends Vue {
   margin-top: 3rem;
   display: flex;
   flex-direction: column;
+}
+
+.avatar-card {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar-card ul {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .welcome-card-join button {
