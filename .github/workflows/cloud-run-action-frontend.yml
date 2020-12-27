@@ -35,7 +35,7 @@ jobs:
           docker push gcr.io/${GCLOUD_PROJECT}/frontend:${GITHUB_REF##*/}
 
       - name: Deploy
-        uses: google-github-actions/deploy-cloudrun@master
+        uses: google-github-actions/deploy-cloudrun@main
         with:
           image: gcr.io/${GCLOUD_PROJECT}/frontend:${GITHUB_REF##*/}
           service: karaokeparty-frontend
