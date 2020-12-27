@@ -15,10 +15,6 @@
 
       <c-button color="#607D8B" class="m-4">Join Game ☝🏼</c-button>
     </c-card>
-
-    <c-card class="avatar-card">
-      <c-avatar-selection></c-avatar-selection>
-    </c-card>
   </div>
 </template>
 
@@ -28,12 +24,11 @@ import CButton from "@/client/components/CButton.vue";
 import CTextInput from "@/client/components/CTextInput.vue";
 import CCard from "@/client/components/CCard.vue";
 import CCodeInput from "@/client/components/CCodeInput.vue";
-import CAvatarSelection from "@/client/components/CAvatarSelection.vue";
 import { EventMessages } from "@/shared/game/messages";
 import { readError, readMe } from "@/client/store/main/getters";
 
 @Component({
-  components: { CAvatarSelection, CCodeInput, CCard, CTextInput, CButton },
+  components: { CCodeInput, CCard, CTextInput, CButton },
 })
 export default class Home extends Vue {
 

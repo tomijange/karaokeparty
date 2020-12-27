@@ -4,6 +4,10 @@
       <h2>Die Lobby</h2>
       <c-text-input id="textInput1" label-text="Username" class="username-input m-4"></c-text-input>
 
+      <c-card class="avatar-card">
+        <c-avatar-selection></c-avatar-selection>
+      </c-card>
+
     </c-card>
   </div>
 </template>
@@ -16,9 +20,10 @@ import { readCurrentMatch, readMe } from "@/client/store/main/getters";
 import { EventMessages } from "@/shared/game/messages";
 import CCard from "@/client/components/CCard.vue";
 import CTextInput from "@/client/components/CTextInput.vue";
+import CAvatarSelection from "@/client/components/CAvatarSelection.vue";
 
 @Component({
-  components: { CTextInput, CCard }
+  components: { CAvatarSelection, CTextInput, CCard }
 })
 export default class GameLobby extends Vue {
 
