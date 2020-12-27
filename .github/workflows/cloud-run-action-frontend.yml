@@ -28,16 +28,16 @@ jobs:
       
       - name: Build
         run: |
-          docker build -t gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${GITHUB_REF##*/} -f docker/frontend.Dockerfile .
+          docker build -t gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${{  github.sha }} -f docker/frontend.Dockerfile .
 
       - name: Push
         run: |
-          docker push gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${GITHUB_REF##*/}
+          docker push gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${{  github.sha }}
 
       - name: Deploy
         id: deploy
         uses: google-github-actions/deploy-cloudrun@main
         with:
-          image: gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${GITHUB_REF##*/}
+          image: gcr.io/${{ env.GCLOUD_PROJECT }}/frontend:${{  github.sha }}
           service: karaokeparty-frontend
 
