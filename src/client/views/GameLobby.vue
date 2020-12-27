@@ -2,9 +2,10 @@
   <div class="game-lobby">
     <c-card>
       <h2>Die Lobby</h2>
-      <c-text-input id="textInput1" label-text="Username" class="username-input m-4"></c-text-input>
+      <c-text-input id="textInput1" label-text="Username" class="username-input m-4" autocomplete="off"></c-text-input>
 
       <c-card class="avatar-card">
+        <h2>Select your Avatar 🥳</h2>
         <c-avatar-selection></c-avatar-selection>
       </c-card>
 
@@ -46,7 +47,7 @@ export default class GameLobby extends Vue {
 
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 
 .game-lobby {
   background: radial-gradient(#ffffff, #eeeeee);
@@ -54,7 +55,22 @@ export default class GameLobby extends Vue {
   width: 100%;
   box-sizing: border-box;
   padding: 64px;
-
 }
+
+.avatar-card {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar-card ul {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 
 </style>
