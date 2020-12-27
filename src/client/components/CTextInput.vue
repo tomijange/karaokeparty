@@ -1,7 +1,7 @@
 <template>
   <div class="input">
     <label :for="id">{{ labelText }}</label>
-    <input :id="id" v-bind="$attrs" type="text" placeholder="Enter your username" @keydown="onInput"/>
+    <input :id="id" v-bind="$attrs" :value="value" type="text" placeholder="Enter your username" @keyup="onInput"/>
   </div>
 </template>
 
@@ -10,7 +10,7 @@
 import {Component, Prop, Vue} from "vue-property-decorator";
 
 @Component({
-  props: ["id", "labelText"]
+  props: ["id", "labelText", "value"]
 })
 export default class CTextInput extends Vue {
 

@@ -28,6 +28,15 @@ export default class ServerMatch implements Match {
     this.room = io.in(this.gameId);
   }
 
+  public updateUser(user: ServerUser) {
+
+    this.users = this.users.map(other => other.userId === user.userId ? user : other);
+
+    this.room.emit(EventMessages.UserUpdated, user);
+
+    debug("Updated user %d", user.userId);
+  }
+
   public joinUser(user: ServerUser) {
     if (user.match) {
       console.error("User " + user.userId + " already is in a match");

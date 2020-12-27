@@ -7,7 +7,7 @@ import {
   commitAddUser,
   commitRemoveUser,
   commitSetCurrentMatch,
-  commitSetError, commitSetMe,
+  commitSetError, commitSetMe, commitUpdateUser,
   mutations
 } from "@/client/store/main/mutations";
 import { Match, User } from "@/shared/game/types";
@@ -39,7 +39,10 @@ export const actions = {
   },
   ['SOCKET_' + EventMessages.Me](context: MainContext, user: User) {
     commitSetMe(context, user);
-  }
+  },
+  ['SOCKET_' + EventMessages.UserUpdated](context: MainContext, user: User) {
+    commitUpdateUser(context, user);
+  },
 };
 
 export const dispatchShowError = dispatch(actions.showError);
