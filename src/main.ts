@@ -7,7 +7,7 @@ import SocketIO from 'socket.io-client'
 
 Vue.use(new VueSocketIO({
   debug: true,
-  connection: SocketIO.io('http://localhost:3000', { transports: ['websocket'] }),
+  connection: SocketIO.io('https://karaokeparty-backend-tomijange-patch-1-wvu5r2geda-uc.a.run.app/', { transports: ['websocket'] }),
   vuex: {
     store,
     actionPrefix: 'SOCKET_',
