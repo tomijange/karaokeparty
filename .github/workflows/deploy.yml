@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    name: Docker deployment frontend
+    name: Docker deployment
     runs-on: ubuntu-latest
     steps:
 
@@ -49,15 +49,11 @@ jobs:
           push: true
           tags: ${{ steps.prep.outputs.tags }}
 
-      - name: Create SSH key
-        run: |
-          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-        shell: bash
-        env:
-          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY }}
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
 
       - name: Setup
         run: |
@@ -67,7 +63,7 @@ jobs:
 
       - name: Run Deploy
         run: |
-          echo "$DOCKER_HOST"
+          ssh "$DOCKER_HOST" docker version
           docker-compose \
             -f docker/docker-compose.yml \
             -f docker/docker-compose.traefik.yml \
