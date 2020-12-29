@@ -51,24 +51,7 @@ jobs:
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
 
       - name: Deploy
-        run: |
-          DOCKER_STACK=karaokeparty-$BRANCH
-          DOMAIN="$DOCKER_STACK.tjanke.de"
-          if [[ $BRANCH == 'master' ]]; then
-            DOCKER_STACK=karaokeparty
-            DOMAIN=karaokeparty.tjanke.de
-          fi
-
-          function exec_docker_compose() {
-            cat docker/docker-compose.yml | ssh $SSH_HOST \
-              "export DOMAIN=$DOMAIN BRANCH=$BRANCH && \
-               echo \"executing command 💻 - \$BRANCH to https://$\DOMAIN\" && \
-               docker-compose -f - -p $DOCKER_STACK $@ && \
-          }
-
-          exec_docker_compose pull
-          exec_docker_compose up -d
-
+        run: docker/deploy.sh
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           BRANCH: ${{ steps.prep.outputs.branch }}
