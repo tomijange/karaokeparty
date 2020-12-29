@@ -48,11 +48,7 @@ export default class Home extends Vue {
 
 <style lang="scss">
 .home {
-  background: radial-gradient(#ffffff, #eeeeee);
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 64px;
+
 }
 
 .username-input label {
@@ -69,20 +65,6 @@ export default class Home extends Vue {
   margin-top: 3rem;
   display: flex;
   flex-direction: column;
-}
-
-.avatar-card {
-  margin-top: 3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.avatar-card ul {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .welcome-card-join button {

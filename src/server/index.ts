@@ -5,6 +5,7 @@ import http from "http";
 import socketIo from 'socket.io';
 import onNewConnection from './newConnectionHandler';
 import cors from 'cors';
+import './fileRepository';
 
 
 const app = express();

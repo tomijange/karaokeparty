@@ -7,17 +7,22 @@ import {
   commitAddUser,
   commitRemoveUser,
   commitSetCurrentMatch,
-  commitSetError, commitSetMe,
+  commitSetError, commitSetMe, commitUpdateUser,
   mutations
 } from "@/client/store/main/mutations";
 import { Match, User } from "@/shared/game/types";
 import router from "@/client/router";
-
+import socket from "@/client/socket";
+import { readMe } from "./getters";
 const { dispatch } = getStoreAccessors<MainState, RootState>("");
 type MainContext = ActionContext<MainState, RootState>;
 
 
 export const actions = {
+  updateMe(context: MainContext, user: User) {
+    commitSetMe(context, user);
+    setTimeout(() => readMe(context) === user ? socket.emit(EventMessages.UpdateMe, user) : null, 1000);
+  },
   showError(context: MainContext, error: string) {
     commitSetError(context, error);
   },
@@ -39,8 +44,12 @@ export const actions = {
   },
   ['SOCKET_' + EventMessages.Me](context: MainContext, user: User) {
     commitSetMe(context, user);
-  }
+  },
+  ['SOCKET_' + EventMessages.UserUpdated](context: MainContext, user: User) {
+    commitUpdateUser(context, user);
+  },
 };
 
 export const dispatchShowError = dispatch(actions.showError);
+export const dispatchUpdateMe = dispatch(actions.updateMe);
 

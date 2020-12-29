@@ -1,21 +1,23 @@
 import Vue from 'vue'
 import App from './client/App.vue'
+import socket from './client/socket';
+
 import router from './client/router'
 import store from './client/store'
 import VueSocketIO from 'vue-socket.io'
 import SocketIO from 'socket.io-client'
 
+Vue.config.productionTip = false
+
 Vue.use(new VueSocketIO({
   debug: true,
-  connection: SocketIO.io('https://karaokeparty-backend-tomijange-patch-1-wvu5r2geda-uc.a.run.app/', { transports: ['websocket'] }),
+  connection: socket,
   vuex: {
-    store,
-    actionPrefix: 'SOCKET_',
-    mutationPrefix: 'SOCKET_'
+      store,
+      actionPrefix: 'SOCKET_',
+      mutationPrefix: 'SOCKET_'
   },
 }))
-
-Vue.config.productionTip = false
 
 new Vue({
   router,

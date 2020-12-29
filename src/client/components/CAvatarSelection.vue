@@ -1,43 +1,58 @@
 <template>
   <div class="avatar pa-4">
-
-    <div class="avatar-selection">
-
-      <c-avatar-parts
-          :avatar-parts="this.heads"
-          v-model="selectedHead">
-      </c-avatar-parts>
-
-      <c-avatar-parts
-          :avatar-parts="this.bodies"
-          v-model="selectedBody">
-      </c-avatar-parts>
-
+    <div class="avatar-selection m-2">
+        <c-avatar-parts 
+            class="avatar-heads"
+            :avatar-parts="this.heads"
+            v-model="avatar"
+            >
+        </c-avatar-parts>
     </div>
-
-    <div class="final-avatar ml-15">
-      <ul>
-        <li>  <span>{{ selectedHead }}  {{ selectedBody }}  </span>  </li>
-      </ul>
-    </div>
-
   </div>
 </template>
 
-<script>
+<script lang="ts">
 
 import {Component, Vue} from "vue-property-decorator";
-import CAvatarParts from "@/client/components/CAvatarParts";
+import CAvatarParts from "@/client/components/CAvatarParts.vue";
+import { readMe } from "../store/main/getters";
+import { dispatchUpdateMe } from "../store/main/actions";
 
 @Component({
   components: {CAvatarParts}
 })
-
 export default class CAvatar extends Vue {
-  heads = ['🙂', '😉', '😲', '😄', '🥴', '🥰'];
-  bodies = ['👔', '🩱', '🥼', '👗', '👕', '🦺'];
-  selectedHead = '🙂';
-  selectedBody = '👔';
+  heads = [
+            '🙂', '🥳', '😄', '😁', '😂', '😀', '🙃', '😉', '😊',
+            '😇', '🥰', '😍', '🤩', '😘', '😋', '😛', '😜', '🤗',
+            '🤫', '🤔', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒',
+            '🙄', '😬', '🤕', '🤖', '🤢', '🤧', '🥵', '🥶', '🥴',
+            '😵', '🤯', '🤠', '😴', '😎', '🤓', '🧐', '😕', '😟',
+            '🙁', '😮', '😯', '😲', '😳', '😱', '😖', '😣', '😞',
+            '🥱', '😤', '😠', '🤬', '💀', '💩', '🤡', '👹', '👽'
+          ]
+
+
+  get avatar() {
+    return this.me?.avatar || '';
+  }
+
+  set avatar(value) {
+    if (this.me) {
+      this.me = {...this.me, avatar: value || ''};
+    }
+  }
+
+  get me() {
+    return readMe(this.$store);
+  }
+
+  set me(value) {
+    if (value) {
+      dispatchUpdateMe(this.$store, value);
+    }
+  }
+  
 }
 
 </script>
@@ -45,38 +60,39 @@ export default class CAvatar extends Vue {
 <style lang="scss">
 
 .avatar {
-  box-shadow: 0 0 10px #919191;
   display: flex;
   flex-direction: row;
+  max-width: 1160px;
 }
-.avatar-selection, .final-avatar ul {
+
+.avatar-selection {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  overflow: hidden;
 }
-.avatar-selection ul, .final-avatar ul {
+
+.avatar-selection .avatar-heads {
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 250px;
+  overflow: auto;
 }
-.avatar-selection li, .final-avatar li {
+
+.avatar-selection ul li {
   cursor: pointer;
   margin: 2px;
   list-style: none;
   width: 50px;
   height: 50px;
-  display: flex;
-  justify-content: center;
   text-align: center;
   box-shadow: 0 0 2px #919191;
   background-color: white;
   transition: background-color 0.2s;
 }
-.final-avatar li {
-  cursor: default;
-  height: 104px;
-  display: flex;
-  flex-direction: column;
-}
-.avatar-selection li span, .final-avatar li span {
+
+.avatar-selection ul li span {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -84,10 +100,7 @@ export default class CAvatar extends Vue {
   height: 100%;
   font-size: 1.4rem;
   background-color: inherit;
-  user-select: none;
-}
-.final-avatar li span {
-  font-size: 1.6rem;
+  user-select: none; 
 }
 
 </style>

@@ -1,21 +1,28 @@
 <template>
   <div class="input">
     <label :for="id">{{ labelText }}</label>
-    <input :id="id" v-bind="$attrs" type="text" placeholder="Enter your username" @keydown="onInput"/>
+    <input :id="id" v-bind="$attrs" :value="value" type="text" placeholder="Enter your username" @keyup="onInput" autocomplete="off"/>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 
 import {Component, Prop, Vue} from "vue-property-decorator";
 
-@Component({
-  props: ["id", "labelText"]
-})
+@Component({})
 export default class CTextInput extends Vue {
 
-  onInput(e) {
-    this.$emit('input', e.target.value);
+  @Prop()
+  readonly id!: string;
+
+  @Prop()
+  readonly labelText!: string;
+
+  @Prop()
+  readonly value!: string;
+
+  onInput(e: any) {
+    this.$emit('input', e.target?.value);
   }
 }
 
@@ -32,6 +39,7 @@ export default class CTextInput extends Vue {
 
 .input input {
   margin: 8px;
+  width: 100%;
   padding: 0;
   outline: none;
   border: none;
