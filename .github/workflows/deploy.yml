@@ -40,14 +40,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          file: docker/frontend.Dockerfile
+#      - name: Build and push
+#        id: docker_build
+#        uses: docker/build-push-action@v2
+#        with:
+#          file: docker/frontend.Dockerfile
 #          push: ${{ github.event_name != 'pull_request' }}
-          push: true
-          tags: ${{ steps.prep.outputs.tags }}
+#          tags: ${{ steps.prep.outputs.tags }}
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -55,13 +54,11 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
 
-      - name: Deploy to Staging
-        uses: JorgenVatle/docker-compose-deploy@v1.0
-        with:
-          deploy_targets: '35.206.117.89' # required, comma separated list of servers to deploy to.
-          ssh_user: 'github-actions' # optional, user to connect to deploy targets with. Defaults to 'root'
-          compose_file: './docker/docker-compose.yml' # optional, path/filename of your docker-compose file. Defaults to 'docker-compose.yml'
-
-
-
+      - name: Deploy
+        run: |
+          cat docker/docker-compose.yml | ssh "github-actions@35.206.117.89" \
+            "echo \"$(echo $ENVIRONMENT | tr -d '\r')\" > .env && \
+            docker-compose -f - up -d"
+        env:
+          ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
 
