@@ -16,6 +16,7 @@ export const io = new socketIo.Server(httpServer, {
     methods: ["GET", "POST"],
     credentials: true,
   },
+  path: '/api/socket.io'
 });
 io.of('api').on('connection', onNewConnection)
 
