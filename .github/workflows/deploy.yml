@@ -55,12 +55,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
 
-      - name: Setup
-        run: |
-          echo "$ENVIRONMENT" > .env
-        env:
-          ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
-
       - name: Run Deploy
         run: |
           ssh "$DOCKER_HOST" docker version
