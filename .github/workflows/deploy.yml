@@ -1,0 +1,58 @@
+name: publish
+
+on: [push]
+
+jobs:
+  build:
+    name: Docker deployment
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Prepare
+        id: prep
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v2
+        with:
+          file: docker/frontend.Dockerfile
+#          push: ${{ github.event_name != 'pull_request' }}
+          push: true
+          tags: karaokeparty/frontend:${{ steps.prep.outputs.branch }}
+
+      - name: Build and push backend
+        uses: docker/build-push-action@v2
+        with:
+          file: docker/backend.Dockerfile
+          #          push: ${{ github.event_name != 'pull_request' }}
+          push: true
+          tags: karaokeparty/backend:${{ steps.prep.outputs.branch }}
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+
+      - name: Deploy
+        run: docker/deploy.sh
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          BRANCH: ${{ steps.prep.outputs.branch }}
+

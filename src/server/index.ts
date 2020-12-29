@@ -12,12 +12,13 @@ const app = express();
 const httpServer = http.createServer(app);
 export const io = new socketIo.Server(httpServer, {
   cors: {
-    origin: "http://localhost:8080",
+    origin: ["http://localhost:8080", "https://*.tjanke.de"],
     methods: ["GET", "POST"],
     credentials: true,
-  }
+  },
+  path: '/api/socket.io'
 });
-io.on('connection', onNewConnection)
+io.of('api').on('connection', onNewConnection)
 
 app.use(cors());
 
@@ -26,6 +27,6 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello world</h1>');
 });
 
-httpServer.listen(3000, () => {
-  console.log('listening on *:3000 💻');
+httpServer.listen(process.env.PORT || 3000, () => {
+  console.log('listening on *:' + process.env.PORT || 3000 + '💻');
 });
