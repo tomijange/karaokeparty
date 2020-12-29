@@ -28,21 +28,21 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Build and push frontend
-        uses: docker/build-push-action@v2
-        with:
-          file: docker/frontend.Dockerfile
-#          push: ${{ github.event_name != 'pull_request' }}
-          push: true
-          tags: karaokeparty/frontend:${{ steps.prep.outputs.branch }}
-
-      - name: Build and push backend
-        uses: docker/build-push-action@v2
-        with:
-          file: docker/backend.Dockerfile
-          #          push: ${{ github.event_name != 'pull_request' }}
-          push: true
-          tags: karaokeparty/backend:${{ steps.prep.outputs.branch }}
+#      - name: Build and push frontend
+#        uses: docker/build-push-action@v2
+#        with:
+#          file: docker/frontend.Dockerfile
+##          push: ${{ github.event_name != 'pull_request' }}
+#          push: true
+#          tags: karaokeparty/frontend:${{ steps.prep.outputs.branch }}
+#
+#      - name: Build and push backend
+#        uses: docker/build-push-action@v2
+#        with:
+#          file: docker/backend.Dockerfile
+#          #          push: ${{ github.event_name != 'pull_request' }}
+#          push: true
+#          tags: karaokeparty/backend:${{ steps.prep.outputs.branch }}
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -59,11 +59,16 @@ jobs:
             DOMAIN=karaokeparty.tjanke.de
           fi
 
-          cat docker/docker-compose.yml | ssh $SSH_HOST \
-            "export DOMAIN=$DOMAIN BRANCH=$BRANCH && \
-             echo \"Deploying \$BRANCH to https://$\DOMAIN\" && \
-             docker-compose -f - -p $DOCKER_STACK pull && \
-             docker-compose -f - -p $DOCKER_STACK up -d"
+          function exec_docker_compose() {
+            cat docker/docker-compose.yml | ssh $SSH_HOST \
+              "export DOMAIN=$DOMAIN BRANCH=$BRANCH && \
+               echo \"executing command 💻 - \$BRANCH to https://$\DOMAIN\" && \
+               docker-compose -f - -p $DOCKER_STACK $@ && \
+          }
+
+          exec_docker_compose pull
+          exec_docker_compose up -d
+
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           BRANCH: ${{ steps.prep.outputs.branch }}
