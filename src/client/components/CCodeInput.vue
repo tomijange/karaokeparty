@@ -1,5 +1,5 @@
 <template>
-  <input type="text" placeholder="..." maxlength="4" class="codeInput"/>
+  <input type="text" placeholder="----" maxlength="4" class="codeInput"/>
 </template>
 
 
@@ -7,13 +7,13 @@
 
 .codeInput {
   text-align: center;
-  margin: 8px;
-  padding: 8px;
+  padding: 8px 10%;
   outline: none;
   border: none;
   border-radius: inherit;
   font-size: 1rem;
-  width: fit-content;
+  letter-spacing: 30px;
+  width: 50%;
   box-shadow: 0 0 5px 1px #d7d7d7;
   background-color: #fff;
 }

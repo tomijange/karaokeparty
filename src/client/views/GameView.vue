@@ -18,7 +18,7 @@ import CSongLine from '../components/CSongLine.vue';
 export default class GameView extends Vue {
 
   get currentLine() {
-    return this.currentMatch?.currentSong?.body.lines[1];
+    return this.currentMatch?.currentSong?.body.lines[0];
   }
   
 

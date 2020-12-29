@@ -11,15 +11,17 @@
     <c-card class="welcome-card-join">
       <h1>Enter a code</h1>
 
-      <c-code-input></c-code-input>
+      <div class="code-input-button">
+        <c-button color="#607D8B" class="d-flex ma-2" v-model="gameID" @click="onJoinGame">Join Game <p class="finger">👉</p></c-button>
+        <c-code-input class="ma-2"></c-code-input>
 
-      <c-button color="#607D8B" class="m-4">Join Game ☝🏼</c-button>
+      </div>
     </c-card>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import CButton from "@/client/components/CButton.vue";
 import CTextInput from "@/client/components/CTextInput.vue";
 import CCard from "@/client/components/CCard.vue";
@@ -32,8 +34,14 @@ import { readError, readMe } from "@/client/store/main/getters";
 })
 export default class Home extends Vue {
 
+  gameID = '';
+
   onCreateGame() {
     this.$socket.emit(EventMessages.CreateMatch);
+  }
+
+  onJoinGame() {
+    // Join match with game-id of this.gameID
   }
 
   get error() {
@@ -47,9 +55,6 @@ export default class Home extends Vue {
 </script>
 
 <style lang="scss">
-.home {
-
-}
 
 .username-input label {
   background-color: #919191;
@@ -69,6 +74,17 @@ export default class Home extends Vue {
 
 .welcome-card-join button {
   width: fit-content;
+}
+
+.code-input-button {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.finger {
+  margin: -5px -10px 0 3px;
 }
 
 </style>
