@@ -10,7 +10,7 @@ fi
 exec_docker_compose() {
   cat docker/docker-compose.yml | ssh $SSH_HOST \
   "export DOMAIN=$DOMAIN BRANCH=$BRANCH && \
-  echo \"executing command 💻 - \$BRANCH to https://$\DOMAIN\" && \
+  echo \"executing command 💻 - \$BRANCH to https://\${DOMAIN}\" && \
   docker-compose -f - -p $DOCKER_STACK $*"
 }
 

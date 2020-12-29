@@ -12,7 +12,7 @@ services:
     image: "karaokeparty/backend:$BRANCH"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.karaokeparty-backend.rule=Host(`${DOMAIN}`) && Path(/api)"
+      - "traefik.http.routers.karaokeparty-backend.rule=Host(`${DOMAIN}`) && Path(`/api`)"
       - "traefik.http.routers.karaokeparty-backend.entrypoints=websecure"
       - "traefik.http.routers.karaokeparty-backend.tls.certresolver=letsencrypt"
       - "traefik.http.routers.karaokeparty-backend.middlewares=karaokeparty-backend-strip-prefix@docker"
