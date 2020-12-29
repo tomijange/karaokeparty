@@ -57,13 +57,12 @@ jobs:
 
       - name: Run Deploy
         run: |
-          docker-compose \
+          DOCKER_HOST="ssh://github-actions@35.206.117.89" docker-compose \
             -f docker/docker-compose.yml \
             -f docker/docker-compose.traefik.yml \
             -p "karaokeparty-production" \
             up -d
-        env:
-          DOCKER_HOST: ${{ secrets.DOCKER_SSH_HOST }}
+
 
 
 
