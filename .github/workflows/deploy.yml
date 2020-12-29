@@ -57,8 +57,8 @@ jobs:
       - name: Deploy
         run: |
           cat docker/docker-compose.yml | ssh "github-actions@35.206.117.89" \
-            "echo \"$(echo $ENVIRONMENT | tr -d '\r')\" > .env && \
-            docker-compose -f - up -d"
+            "echo \"$(echo "$ENVIRONMENT" | tr -d '\r')\" > .env && \
+            docker-compose -f - -p karaokeparty up -d"
         env:
           ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
 
