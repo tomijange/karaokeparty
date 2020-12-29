@@ -55,15 +55,12 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
 
-      - name: Run Deploy
-        run: |
-          docker-compose \
-            -f docker/docker-compose.yml \
-            -f docker/docker-compose.traefik.yml \
-            --host "ssh://github-actions@35.206.117.89" \
-            -p "karaokeparty-production" \
-            up -d
-
+      - name: Deploy to Staging
+        uses: JorgenVatle/docker-compose-deploy@v1.0
+        with:
+          deploy_targets: '35.206.117.89' # required, comma separated list of servers to deploy to.
+          ssh_user: 'github-actions' # optional, user to connect to deploy targets with. Defaults to 'root'
+          compose_file: './docker/docker-compose.yml' # optional, path/filename of your docker-compose file. Defaults to 'docker-compose.yml'
 
 
 
