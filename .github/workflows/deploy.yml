@@ -14,19 +14,7 @@ jobs:
       - name: Prepare
         id: prep
         run: |
-          DOCKER_IMAGE=karaokeparty/frontend
-          VERSION=edge
-          if [[ $GITHUB_REF == refs/branches/* ]]; then
-            VERSION=${GITHUB_REF#refs/branches/v}
-          fi
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            VERSION=nightly
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          if [[ $VERSION =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-            TAGS="$TAGS,${DOCKER_IMAGE}:latest"
-          fi
-          echo ::set-output name=tags::${TAGS}
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -40,13 +28,21 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-#      - name: Build and push
-#        id: docker_build
-#        uses: docker/build-push-action@v2
-#        with:
-#          file: docker/frontend.Dockerfile
+      - name: Build and push frontend
+        uses: docker/build-push-action@v2
+        with:
+          file: docker/frontend.Dockerfile
 #          push: ${{ github.event_name != 'pull_request' }}
-#          tags: ${{ steps.prep.outputs.tags }}
+          push: true
+          tags: karaokeparty/frontend:${{ steps.prep.outputs.branch }}
+
+      - name: Build and push backend
+        uses: docker/build-push-action@v2
+        with:
+          file: docker/backend.Dockerfile
+          #          push: ${{ github.event_name != 'pull_request' }}
+          push: true
+          tags: karaokeparty/backend:${{ steps.prep.outputs.branch }}
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -56,9 +52,19 @@ jobs:
 
       - name: Deploy
         run: |
-          cat docker/docker-compose.yml | ssh "github-actions@35.206.117.89" \
-            "echo \"$(echo "$ENVIRONMENT" | tr -d '\r')\" > .env && \
-            docker-compose -f - -p karaokeparty up -d"
+          DOCKER_STACK=karaokeparty-$BRANCH
+          DOMAIN="$DOCKER_STACK.tjanke.de"
+          if [[ $BRANCH == 'master' ]]; then
+            DOCKER_STACK=karaokeparty
+            DOMAIN=karaokeparty.tjanke.de
+          fi
+
+          cat docker/docker-compose.yml | ssh $SSH_HOST \
+            "DOMAIN=$DOMAIN BRANCH=$BRANCH && \
+             echo "Deploying \$BRANCH to https://$\DOMAIN" && \
+             docker-compose -f - -p $DOCKER_STACK pull && \
+             docker-compose -f - -p $DOCKER_STACK up -d"
         env:
-          ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          BRANCH: ${{ steps.prep.outputs.branch }}
 
