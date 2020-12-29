@@ -3,6 +3,8 @@ version: "3.7"
 services:
   frontend:
     image: "karaokeparty/frontend:$BRANCH"
+    networks:
+      - traefik
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.karaokeparty-frontend.rule=Host(`${DOMAIN}`)"
@@ -10,6 +12,8 @@ services:
       - "traefik.http.routers.karaokeparty-frontend.tls.certresolver=letsencrypt"
   backend:
     image: "karaokeparty/backend:$BRANCH"
+    networks:
+      - traefik
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.karaokeparty-backend.rule=Host(`${DOMAIN}`) && Path(`/api`)"
@@ -18,3 +22,6 @@ services:
       - "traefik.http.routers.karaokeparty-backend.middlewares=karaokeparty-backend-strip-prefix@docker"
       - "traefik.http.middlewares.karaokeparty-backend-strip-prefix.stripprefix.prefixes=/api"
 
+networks:
+  traefik:
+    external: true
