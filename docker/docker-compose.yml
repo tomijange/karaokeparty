@@ -16,7 +16,7 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.karaokeparty-backend.rule=Host(`${DOMAIN}`) && Path(`/api`)"
+      - "traefik.http.routers.karaokeparty-backend.rule=Host(`${DOMAIN}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.karaokeparty-backend.entrypoints=websecure"
       - "traefik.http.routers.karaokeparty-backend.tls.certresolver=letsencrypt"
 
