@@ -1,20 +1,30 @@
 <template>
   <div class="game-lobby">
-    <c-card v-if="currentMatch">
-      <h2>Die Lobby</h2>
-      <c-text-input id="textInput1" label-text="Username" class="username-input m-4" autocomplete="off"></c-text-input>
-
-      <c-card class="avatar-card">
+    <c-card v-if="error">
+      {{ error }}
+    </c-card>
+    <div class="d-flex">
+      <c-card v-if="currentMatch" class="flex">
+        <h2>Die Lobby</h2>
+        <c-text-input id="textInput1" label-text="Username" class="username-input m-4" v-model="name"></c-text-input>
+        <div class="start" v-if="isLeader">
+          <c-button color="#607D8B" class="m-4">Start 🎤</c-button>
+        </div>
+      </c-card>
+      <c-card class="ml-2 flex">
         <h2>Select your Avatar 🥳</h2>
         <c-avatar-selection></c-avatar-selection>
       </c-card>
-      <c-text-input id="textInput1" label-text="Username" class="username-input m-4" v-model="name"></c-text-input>
+    </div>
 
-      <ul>
-        <li v-for="user in currentMatch.users" :key="user.userId">{{user.name}}</li>
-      </ul>
-
+    <c-card v-if="currentMatch" class="mt-10">
+      <h2>Die Lobby</h2>
+      <c-user-list>
+        <c-user-list-item v-for="user in currentMatch.users" :key="user.userId" :user="user"></c-user-list-item>
+      </c-user-list>
     </c-card>
+
+
   </div>
 </template>
 
@@ -22,17 +32,19 @@
 <script lang="ts">
 
 import { Component, Vue } from "vue-property-decorator";
-import { readCurrentMatch, readMe } from "@/client/store/main/getters";
+import { readCurrentMatch, readError, readMe } from "@/client/store/main/getters";
 import { EventMessages } from "@/shared/game/messages";
 import CCard from "@/client/components/CCard.vue";
 import CTextInput from "@/client/components/CTextInput.vue";
 import CAvatarSelection from "@/client/components/CAvatarSelection.vue";
-import { commitSetMe } from "@/client/store/main/mutations";
-import { debounce } from 'underscore';
+import CUserListItem from '@/client/components/CUserListItem.vue';
+import CUserList from '@/client/components/CUserList.vue';
+import CButton from "@/client/components/CButton.vue";
+import { dispatchUpdateMe } from "../store/main/actions";
 
 
 @Component({
-  components: { CAvatarSelection, CTextInput, CCard }
+  components: {CButton, CAvatarSelection, CTextInput, CCard, CUserListItem, CUserList }
 })
 export default class GameLobby extends Vue {
 
@@ -43,8 +55,16 @@ export default class GameLobby extends Vue {
     }
   }
 
+  get error() {
+    return readError(this.$store);
+  }
+
   get currentMatch() {
     return readCurrentMatch(this.$store);
+  }
+
+  get isLeader() {
+    return this.me?.type === 'leader';
   }
 
   get name() {
@@ -62,10 +82,10 @@ export default class GameLobby extends Vue {
   }
 
   set me(value) {
-    commitSetMe(this.$store, value);
-    debounce(() => this.$socket.emit(EventMessages.UpdateMe, value), 100)();
+    if (value) {
+      dispatchUpdateMe(this.$store, value);
+    }
   }
-
 }
 
 </script>
@@ -73,27 +93,13 @@ export default class GameLobby extends Vue {
 <style lang="scss">
 
 .game-lobby {
-  background: radial-gradient(#ffffff, #eeeeee);
-  height: 100%;
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.start {
   width: 100%;
-  box-sizing: border-box;
-  padding: 64px;
+  text-align: center;
+  transform: scale(1.1);
 }
-
-.avatar-card {
-  margin-top: 3rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.avatar-card ul {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-
 </style>

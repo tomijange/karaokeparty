@@ -13,27 +13,21 @@
   </ul>
 </template>
 
-<script>
+<script lang="ts">
 
-import {Component, Vue} from "vue-property-decorator";
+import {Component, Prop, Vue} from "vue-property-decorator";
 
-@Component({
-  props: {
-    avatarParts: {
-      type: Array,
-      default: ['🙂'],
-    },
-    value: {
-      type: String,
-      default: '',
-    }
-  }
-})
-
+@Component({})
 export default class CAvatarParts extends Vue {
 
+  @Prop()
+  public avatarParts!: string[];
 
-  onEmojiClick1(part) {
+  @Prop()
+  public value!: string;
+
+
+  onEmojiClick1(part: string) {
     this.$emit('input', part);
   }
 

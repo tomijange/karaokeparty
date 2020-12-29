@@ -5,6 +5,8 @@ import { io } from '.';
 import ServerUser from "@/server/user";
 import { gameHandler } from "@/server/gameHandler";
 import debug from "@/server/debug";
+import { UltraStarFile } from "@/shared/ultrastar-parser/types";
+import songs from './fileRepository';
 
 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
 
@@ -18,14 +20,16 @@ function generateGameId(length = 4): GameId {
 
 export default class ServerMatch implements Match {
   public gameId: GameId;
-  public users: User[] = [];
+  public users: ServerUser[] = [];
   public state: MatchState = 'voting';
+  public currentSong: UltraStarFile | undefined;
   private room: Server;
   private removeTaskId?: NodeJS.Timeout;
 
   constructor() {
     this.gameId = generateGameId();
     this.room = io.in(this.gameId);
+    this.currentSong = songs.songs[0];
   }
 
   public updateUser(user: ServerUser) {
@@ -46,6 +50,16 @@ export default class ServerMatch implements Match {
     debug("Joined user " + user.userId + " to " + this.gameId);
 
     user.match = this;
+    if(!this.users.length) {
+      // set leader if no user is in this match
+      user.type = 'leader';
+    } else {
+      // reset if in other match before
+      user.type = 'normal';
+    }
+    // send the me packet for the user himself again
+    user.socket.emit(EventMessages.Me, user);
+
     this.users = [...this.users, user];
     user.socket.join(this.gameId);
 
@@ -69,6 +83,12 @@ export default class ServerMatch implements Match {
 
     if(!this.users.length) {
       this.checkEmpty();
+    } else {
+      const newLeader = this.users[0];
+      newLeader.type = 'leader';
+      newLeader.socket.emit(EventMessages.Me, newLeader);
+      this.room.emit(EventMessages.UserUpdated, newLeader);
+
     }
   }
 
@@ -82,7 +102,7 @@ export default class ServerMatch implements Match {
         gameHandler.removeMatch(this);
       }
       this.removeTaskId = undefined;
-    }, 1000 * 10)
+    }, 1000 * 100)
   }
 
 

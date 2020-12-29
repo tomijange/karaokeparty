@@ -12,10 +12,12 @@ export default class ServerUser extends User {
     this.socket = socket;
     if (userId instanceof ServerUser) {
       this.match = userId.match;
+      this.type = userId.type;
     }
     if (copyFrom) {
       this.name = copyFrom.name;
       this.state = copyFrom.state;
+      this.avatar = copyFrom.avatar;
     }
   }
 

@@ -4,16 +4,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {Component, Vue} from "vue-property-decorator";
-@Component({
-  props: {
-    color: {
-      type: String,
-      default: 'red',
-    }
-  }
-})
+@Component({})
 export default class CCard extends Vue {
 }
 </script>

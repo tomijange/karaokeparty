@@ -48,11 +48,7 @@ export default class Home extends Vue {
 
 <style lang="scss">
 .home {
-  background: radial-gradient(#ffffff, #eeeeee);
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 64px;
+
 }
 
 .username-input label {
