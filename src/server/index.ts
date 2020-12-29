@@ -12,12 +12,12 @@ const app = express();
 const httpServer = http.createServer(app);
 export const io = new socketIo.Server(httpServer, {
   cors: {
-    origin: "http://localhost:8080",
+    origin: ["http://localhost:8080", "https://*.tjanke.de"],
     methods: ["GET", "POST"],
     credentials: true,
-  }
+  },
 });
-io.on('connection', onNewConnection)
+io.of('api').on('connection', onNewConnection)
 
 app.use(cors());
 
@@ -27,5 +27,5 @@ app.get('/', (req, res) => {
 });
 
 httpServer.listen(process.env.PORT || 3000, () => {
-  console.log('listening on *:' + process.env.PORT + '💻');
+  console.log('listening on *:' + process.env.PORT || 3000 + '💻');
 });
