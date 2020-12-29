@@ -63,7 +63,7 @@ jobs:
             -p "karaokeparty-production" \
             up -d
         env:
-          DOCKER_HOST: ${{ secrets.DOCKER_HOST }}
+          DOCKER_HOST: ${{ secrets.DOCKER_SSH_HOST }}
 
 
 
