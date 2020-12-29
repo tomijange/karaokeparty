@@ -60,8 +60,8 @@ jobs:
           fi
 
           cat docker/docker-compose.yml | ssh $SSH_HOST \
-            "DOMAIN=$DOMAIN BRANCH=$BRANCH && \
-             echo "Deploying \$BRANCH to https://$\DOMAIN" && \
+            "export DOMAIN=$DOMAIN BRANCH=$BRANCH && \
+             echo \"Deploying \$BRANCH to https://$\DOMAIN\" && \
              docker-compose -f - -p $DOCKER_STACK pull && \
              docker-compose -f - -p $DOCKER_STACK up -d"
         env:
