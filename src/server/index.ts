@@ -18,7 +18,7 @@ export const io = new socketIo.Server(httpServer, {
   },
   path: '/api/socket.io'
 });
-io.of('api').on('connection', onNewConnection)
+io.on('connection', onNewConnection)
 
 app.use(cors());
 
