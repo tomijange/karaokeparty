@@ -13,6 +13,9 @@ try {
         console.log(file);
         try {
             const output = parseUltrastarFile(fs.readFileSync(path.join(dataPath, file)).toString());
+            if (!output) {
+                return;
+            }
             console.log(JSON.stringify(output, null, 2));
             songs.push(output);
         } catch (e) {

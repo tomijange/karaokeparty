@@ -1,7 +1,5 @@
 <template>
-  <div v-if="currentMatch">
-    <c-song-line :line="currentLine"></c-song-line>
-  </div>
+  <k-song v-if="currentMatch" :file="currentSong"></k-song>
 </template>
 
 <script lang="ts">
@@ -10,15 +8,15 @@ import {Component, Vue} from "vue-property-decorator";
 import { readCurrentMatch, readError, readMe } from "@/client/store/main/getters";
 import { dispatchUpdateMe } from "../store/main/actions";
 import { EventMessages } from "@/shared/game/messages";
-import CSongLine from '../components/CSongLine.vue';
+import KSong from '../components/game/KSong.vue';
 
 @Component({
-  components: { CSongLine }
+  components: { KSong }
 })
 export default class GameView extends Vue {
 
-  get currentLine() {
-    return this.currentMatch?.currentSong?.body.lines[0];
+  get currentSong() {
+    return this.currentMatch?.currentSong;
   }
   
 

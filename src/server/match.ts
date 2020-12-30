@@ -23,13 +23,20 @@ export default class ServerMatch implements Match {
   public users: ServerUser[] = [];
   public state: MatchState = 'voting';
   public currentSong: UltraStarFile | undefined;
-  private room: Server;
   private removeTaskId?: NodeJS.Timeout;
 
   constructor() {
     this.gameId = generateGameId();
-    this.room = io.in(this.gameId);
     this.currentSong = songs.songs[0];
+  }
+
+  private get room() {
+    return io.in(this.gameId);
+  }
+
+  public setState(newState: MatchState) {
+    this.state = newState;
+    this.room.emit(EventMessages.MatchInfo, this);
   }
 
   public updateUser(user: ServerUser) {
@@ -64,7 +71,7 @@ export default class ServerMatch implements Match {
     user.socket.join(this.gameId);
 
     // send join information to joining user
-    user.socket.emit(EventMessages.JoinMatch, this);
+    user.socket.emit(EventMessages.MatchInfo, this);
 
     // send user joined event
     this.room.emit(EventMessages.UserJoined, user);

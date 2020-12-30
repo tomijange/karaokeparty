@@ -6,8 +6,11 @@ import router from './client/router'
 import store from './client/store'
 import VueSocketIO from 'vue-socket.io'
 import SocketIO from 'socket.io-client'
+import VueKonva from 'vue-konva'
 
 Vue.config.productionTip = false
+
+Vue.use(VueKonva)
 
 Vue.use(new VueSocketIO({
   debug: true,

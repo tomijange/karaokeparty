@@ -29,12 +29,11 @@ export const actions = {
   ['SOCKET_' + EventMessages.Error](context: MainContext, payload: string) {
     dispatchShowError(context, payload);
   },
-  ['SOCKET_' + EventMessages.JoinMatch](context: MainContext, match: Match) {
+  ['SOCKET_' + EventMessages.MatchInfo](context: MainContext, match: Match) {
     commitSetCurrentMatch(context, match);
-    if (router.currentRoute.params.gameId === match.gameId) {
-      return;
+    if (router.currentRoute.name !== `game-${match.state}`){
+      router.push({name: `game-${match.state}`, params: { gameId: match.gameId }});
     }
-    router.push({name: 'Game Lobby', params: { gameId: match.gameId }});
   },
   ['SOCKET_' + EventMessages.UserJoined](context: MainContext, user: User) {
     commitAddUser(context, user);

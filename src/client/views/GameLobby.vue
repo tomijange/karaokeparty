@@ -8,7 +8,7 @@
         <h2>Die Lobby</h2>
         <c-text-input id="textInput1" label-text="Username" class="username-input m-4" v-model="name"></c-text-input>
         <div class="start" v-if="isLeader">
-          <c-button color="#607D8B" class="m-4">Start 🎤</c-button>
+          <c-button color="#607D8B" class="ma-4" @click="startGame">Start 🎤</c-button>
         </div>
       </c-card>
       <c-card class="ml-2 flex">
@@ -55,6 +55,10 @@ export default class GameLobby extends Vue {
     }
   }
 
+  startGame() {
+    this.$socket.emit(EventMessages.StartMatch, '');
+  }
+
   get error() {
     return readError(this.$store);
   }
@@ -68,10 +72,15 @@ export default class GameLobby extends Vue {
   }
 
   get name() {
-    return this.me?.name;
+    return this.me?.name || '';
   }
 
   set name(value) {
+    if (!value) {
+      return;
+    }
+    value = value.replace(/\W/g, '');
+
     if (this.me) {
       this.me = {...this.me, name: value || ''};
     }
@@ -95,11 +104,5 @@ export default class GameLobby extends Vue {
 .game-lobby {
   margin: 0 auto;
   max-width: 800px;
-}
-
-.start {
-  width: 100%;
-  text-align: center;
-  transform: scale(1.1);
 }
 </style>

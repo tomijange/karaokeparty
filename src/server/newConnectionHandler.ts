@@ -57,6 +57,17 @@ export default function (socket: Socket) {
     match.joinUser(currentUser);
   })
 
+  on(EventMessages.StartMatch, () => {
+    const match = currentUser.match;
+    if (!match) {
+      throw Error("match not found");
+    }
+    if(currentUser.type !== 'leader') {
+      throw Error("user is not a leader");
+    }
+    match.setState('singing');
+  })
+
   on('error', (error) => {
     console.error(error);
   })

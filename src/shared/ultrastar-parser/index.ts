@@ -9,7 +9,7 @@ import {
 import { log } from "../index";
 
 
-export function parseUltrastarFile(file: string): UltraStarFile {
+export function parseUltrastarFile(file: string): UltraStarFile | null {
 
   const lines = file.split(/\r?\n/);
 
@@ -57,7 +57,8 @@ export function parseUltrastarFile(file: string): UltraStarFile {
       return;
     }
     if (entryType === UltraStarType.End) {
-      log("End of file");
+      const lastSyllable = currentLine.syllables[currentLine.syllables.length -1];
+      currentLine.end = lastSyllable.start + lastSyllable.duration;
       return;
     }
     if (entryType === UltraStarType.Linebreak) {
@@ -92,6 +93,9 @@ export function parseUltrastarFile(file: string): UltraStarFile {
     currentLine.syllables.push(syllable);
   })
 
+  if(!header.title) {
+    return null;
+  }
 
   return { header, body } as UltraStarFile;
 }

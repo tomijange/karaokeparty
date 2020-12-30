@@ -20,12 +20,12 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/:gameId',
-    name: 'Game Lobby',
+    name: 'game-voting',
     component: () => import('../views/GameLobby.vue')
   },
   {
     path: '/:gameId/game',
-    name: 'Game',
+    name: 'game-singing',
     component: () => import('../views/GameView.vue')
   }
 ]
