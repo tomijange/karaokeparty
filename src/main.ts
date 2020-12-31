@@ -5,12 +5,14 @@ import socket from './client/socket';
 import router from './client/router'
 import store from './client/store'
 import VueSocketIO from 'vue-socket.io'
-import SocketIO from 'socket.io-client'
-import VueKonva from 'vue-konva'
+import resize from "vue-element-resize-detector";
+import VueYoutube from 'vue-youtube';
+
 
 Vue.config.productionTip = false
 
-Vue.use(VueKonva)
+Vue.use(resize);
+Vue.use(VueYoutube);
 
 Vue.use(new VueSocketIO({
   debug: true,

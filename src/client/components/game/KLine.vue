@@ -1,32 +1,52 @@
 <template>
-  <v-group>
-    <v-rect v-for="note in noteConfigs" :key="note.id" :config="note"></v-rect>
+  <div>
+    <div 
+      v-for="note in noteConfigs" 
+      :key="note.id"
+      :style="{
+        top: note.y + 'px',
+        left: note.x + 'px',
+        width: note.width + 'px',
+        height: note.height + 'px',
+      }"
+      :class="{
+        note: true,
+        'note-active': note.active,
+      }"
+    >
+      <div class="progress" :style="{
+          width: note.progressWidth + 'px',
+        }">
 
-    <v-text v-for="text in textConfigs" :key="text.id" :config="text"></v-text>
-  </v-group>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { UltraStarLine, UltraStarSyllable } from '@/shared/ultrastar-parser/types';
-import Konva from 'konva';
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
+import { ContainerConfig, SyllablePillConfig } from './types';
 
 @Component
 export default class KNote extends Vue {
 
   @Prop()
-  line!: UltraStarLine;
+  readonly line!: UltraStarLine;
 
   @Prop()
-  config!: Konva.ContainerConfig;
+  readonly config!: ContainerConfig;
 
-  noteConfigs: Konva.RectConfig[] = [];
+  @Prop()
+  readonly beat!: number;
 
-  textConfigs: Konva.TextConfig[] = [];
+  noteConfigs: SyllablePillConfig[] = [];
+
+  textConfigs: ContainerConfig[] = [];
 
 
   @Watch('config', { immediate: true })
-  onConfigChange(newConfig?: Konva.ContainerConfig, oldConfig?: Konva.ContainerConfig) {
+  onConfigChange(newConfig?: ContainerConfig, oldConfig?: ContainerConfig) {
     this.calculatePositions();   
   }
 
@@ -35,15 +55,22 @@ export default class KNote extends Vue {
     this.calculatePositions();   
   }
 
+  @Watch('beat', {immediate: true})
+  onBeatChange(newBeat?: number, oldBeat?: number) {
+    this.calculatePositions();
+  }
+
   calculatePositions() {
     if(!this.line || !this.config) {
+      this.noteConfigs = [];
+      this.textConfigs = [];
       return;
     } 
 
     const { width, height } = this.config;
 
-    const noteConfigs: Konva.RectConfig[] = [];
-    const textConfigs: Konva.TextConfig[] = [];
+    const noteConfigs: SyllablePillConfig[] = [];
+    const textConfigs: ContainerConfig[] = [];
 
     let lowestPitch = Infinity, highestPitch = -Infinity;
 
@@ -58,40 +85,34 @@ export default class KNote extends Vue {
 
     // in beats
     const lineDuration = this.line.end! - this.line.start!;
-
     const pitchDiff = highestPitch - lowestPitch;
 
     const lineHeight = pitchDiff * 40;
 
-    const noteHeight = 40;
-
+    const noteHeight = 20;
     const noteMargin = 4;
 
     for(const syllable of this.line.syllables) {
       const start = syllable.start - this.line.start!;
       const relativePitch = syllable.pitch - lowestPitch;
+      const currentNote = syllable.start <= this.beat && (syllable.start + syllable.duration) >= this.beat;
+      const noteWidth = (syllable.duration / lineDuration) * width! - noteMargin * 2;
+      let progressWidth = 0;
+      if (currentNote) {
+        progressWidth = (this.beat - syllable.start) / syllable.duration * noteWidth;
+      } else if(syllable.start < this.beat){
+        progressWidth = noteWidth;
+      }
 
       noteConfigs.push({
         x: (start / lineDuration) * width! + noteMargin,
         y: height! / 2 - (relativePitch / pitchDiff * lineHeight) - noteHeight + lineHeight / 2,
-        fill: 'rgba(200,122,255,0.4)',
-        cornerRadius: 8,
         height: noteHeight,
-        width: (syllable.duration / lineDuration) * width! - noteMargin * 2,
-        shadowBlur: 8,
-      });
-
-      textConfigs.push({
-        x: (start / lineDuration) * width! + noteMargin,
-        y: height! - 40,
-        fill: 'black',
-        cornerRadius: 8,
-        width: (syllable.duration / lineDuration) * width! - noteMargin * 2,
-        shadowBlur: 8,
-        text: syllable.text,
-        fontFamily: 'Arial',
-        fontSize: 16,
-        align: 'center',
+        width: noteWidth,
+        type: 'normal', 
+        active: currentNote,
+        id: syllable.start,
+        progressWidth,
       });
     }
 
@@ -102,6 +123,31 @@ export default class KNote extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+
+.note {
+  --color: rgba(122,122,200, 0.5);
+
+  position: absolute;
+  background-color: rgba(255,255,255, 0.5);
+  border-radius: 8px;
+  transition-duration: .2s;
+  transition-property: box-shadow,background-color,transform;
+  box-shadow: 1px 1px 5px 1px var(--color);
+  transform: scale(1);
+
+  &.note-active {
+    --color: rgba(122,200,255, 1);
+    box-shadow: 1px 1px 8px 2px var(--color);
+    transform: scale(1.1);
+  }
+  .progress {
+    background-color: rgba(122,200,255, 1);
+    width: 0;
+    height: 100%;
+    transition: width .1s;
+    border-radius: 8px;
+  }
+}
 
 </style>

@@ -82,7 +82,7 @@ export function parseUltrastarFile(file: string): UltraStarFile | null {
       start: +line.substring(startIndex, durationIndex),
       duration: +line.substring(durationIndex, pitchIndex),
       pitch: +line.substring(pitchIndex, textIndex),
-      text: line.substring(textIndex)
+      text: line.substring(textIndex+1)
     };
 
 
