@@ -18,6 +18,7 @@ export default class ServerUser extends User {
       this.name = copyFrom.name;
       this.state = copyFrom.state;
       this.avatar = copyFrom.avatar;
+      this.playerState = copyFrom.playerState;
     }
   }
 

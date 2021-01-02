@@ -21,6 +21,7 @@ export interface UltraStarHeader {
   video: string;
   bpm: number;
   gap: number;
+  youtube: string;
 }
 
 export interface UltraStarSyllable {

@@ -6,10 +6,9 @@ import {
   UltraStarSyllable,
   UltraStarType
 } from "./types";
-import { log } from "../index";
 
 
-export function parseUltrastarFile(file: string): UltraStarFile | null {
+export function parseUltrastarFile(file: string, type: 'header' | 'full' = 'full'): UltraStarFile | null {
 
   const lines = file.split(/\r?\n/);
 
@@ -25,6 +24,7 @@ export function parseUltrastarFile(file: string): UltraStarFile | null {
     video = '';
     year = 0;
     title = '';
+    youtube = '';
   };
 
   const body: UltraStarBody = {

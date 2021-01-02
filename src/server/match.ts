@@ -1,4 +1,4 @@
-import { GameId, Match, MatchState, User } from "@/shared/game/types";
+import { GameId, Match, MatchState, PlayerState, User } from "@/shared/game/types";
 import { EventMessages } from "@/shared/game/messages";
 import { Server } from "socket.io";
 import { io } from '.';
@@ -6,7 +6,7 @@ import ServerUser from "@/server/user";
 import { gameHandler } from "@/server/gameHandler";
 import debug from "@/server/debug";
 import { UltraStarFile } from "@/shared/ultrastar-parser/types";
-import songs from './fileRepository';
+import { songs } from './songs/fileRepository';
 
 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
 
@@ -24,10 +24,11 @@ export default class ServerMatch implements Match {
   public state: MatchState = 'voting';
   public currentSong: UltraStarFile | undefined;
   private removeTaskId?: NodeJS.Timeout;
+  public playerState: PlayerState = 'loading';
 
   constructor() {
     this.gameId = generateGameId();
-    this.currentSong = songs.songs[0];
+    this.currentSong = songs[0];
   }
 
   private get room() {
@@ -39,11 +40,26 @@ export default class ServerMatch implements Match {
     this.room.emit(EventMessages.MatchInfo, this);
   }
 
+  public checkUserReadiness() {
+    const newState = this.users.every(user => user.playerState === 'ready') 
+      ? 'ready' : this.users.every(user => user.playerState === 'finished') 
+        ? 'finished' : null;
+    if (newState && newState !== this.playerState) {
+      this.playerState = newState;
+      if (this.playerState === 'finished') {
+        this.state = 'final';
+      }
+      this.room.emit(EventMessages.MatchInfo, this);
+    }
+  }
+
   public updateUser(user: ServerUser) {
 
     this.users = this.users.map(other => other.userId === user.userId ? user : other);
 
     this.room.emit(EventMessages.UserUpdated, user);
+
+    this.checkUserReadiness();
 
     debug("Updated user %d", user.userId);
   }

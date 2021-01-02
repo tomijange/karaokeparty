@@ -12,3 +12,8 @@ declare module 'vue-youtube'{
   import vueYoutube from 'vue-youtube';
   export default vueYoutube;
 }
+
+declare module 'pitch-analyser' {
+  import pitchAnalyser from 'pitch-analyser';
+  export default pitchAnalyser;
+}

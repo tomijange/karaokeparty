@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{ this.started }}
     <div class="game">
       <div ref="wrapper" class="wrapper" v-resize @resize="handleResize">
         <transition name="fade">
@@ -8,10 +9,11 @@
             :config="configKonva"
             :beat="currentBeat"
             :key="currentLine && currentLine.start"
+            :pitch="currentPitch"
           >
           </k-line>
         </transition>
-        <k-video-player ref="video" @playing="onVideoPlaying"></k-video-player>
+        <k-video-player ref="video" @playing="onVideoPlaying" @ended="onVideoEnded" :videoId="videoId"></k-video-player>
       </div>
       <div class="texts">
         <k-line-text
@@ -29,21 +31,20 @@
         </k-line-text>
       </div>
     </div>
-
-    <c-button @click="startSong">Start</c-button>
-    <c-button @click="pauseSong">Pause</c-button>
   </div>
 </template>
 
 <script lang="ts">
 import { UltraStarFile, UltraStarLine } from "@/shared/ultrastar-parser/types";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import CButton from "@/client/components/CButton.vue";
 import KTimeline from "@/client/components/game/KTimeline.vue";
 import KLineText from "@/client/components/game/KLineText.vue";
 import KLine from "@/client/components/game/KLine.vue";
 import KVideoPlayer from '@/client/components/game/KVideoPlayer.vue';
-import { ContainerConfig } from "./types";
+import { ContainerConfig, Pitch } from "./types";
+import PlayerStates from 'youtube-player/dist/constants/PlayerStates';
+import pitchAnalyzer from 'pitch-analyser';
 
 @Component({
   components: { CButton, KLineText, KLine, KVideoPlayer },
@@ -52,44 +53,85 @@ export default class KSong extends Vue {
   @Prop()
   readonly file!: UltraStarFile;
 
+  @Prop()
+  readonly started!: boolean;
+
   configKonva: ContainerConfig | null = null;
 
   currentBeat?: number = 0;
-
   currentLine: UltraStarLine | null = null;
   nextLine: UltraStarLine | null = null;
+  analyser!: any;
+  currentPitch: Pitch | null = null;
 
-  currentLoop?: (frame: number) => void = undefined;
+  mounted() {
+    this.analyser = new pitchAnalyzer({
+      callback: this.onPitch
+    });
+    this.startSong();
+  }
+
+  currentLoop?: (frame: number) => void;
 
   get player() {
     return (this.$refs.video as KVideoPlayer);
   }
 
+  get videoId() {
+    return (this as any).$youtube.getIdFromUrl(this.file.header.youtube);
+  }
+
+  @Watch('started')
+  onStartedChange() {
+    if(!this.started){
+      this.pauseSong();
+    } else {
+      this.startSong();
+    }
+  }
+
+  onVideoEnded() {
+    console.log("Finished");
+    this.$emit("finished");
+  }
+
   onVideoPlaying() {
-    // start after gap
-    setTimeout(() => {
+    this.$emit("ready");
+    if(!this.started) {
+      this.pauseSong();
+    } else {
       this.startGameLoop();
-    }, this.file.header.gap);
+    }
   }
 
   pauseSong() {
-    this.currentLoop = undefined;
+    this.player.player.pauseVideo();
   }
 
-  startSong() {
+  async startSong() {
+    await this.analyser.initAnalyser();
+    await this.analyser.startAnalyser();
     this.player.startVideo();
   }
 
+  onPitch(pitch: Pitch) {
+    this.currentPitch = pitch;
+  }
+
   startGameLoop() {
-    let firstFrame: number | undefined = undefined;
-    const loop = (frame: number) => {
-      if (firstFrame === undefined) {
-        firstFrame = frame;
+    if (this.currentLoop) {
+      return;
+    }
+    const loop = async (frame: number) => {
+      if (await this.player.player.getPlayerState() !== PlayerStates.PLAYING) {
+        // wait for playing state
+        this.currentLoop = undefined;
+        return;
       }
-      this.gameLoop(frame - firstFrame);
-      if (this.currentLoop === loop) {
-        window.requestAnimationFrame(loop);
-      }
+      // for some reason this returns a promise
+      const playerTime = await this.player.player.getCurrentTime() * 1000 - this.file.header.gap;
+      this.gameLoop(playerTime);
+      window.requestAnimationFrame(loop);
     };
     this.currentLoop = loop;
     window.requestAnimationFrame(loop);
@@ -98,7 +140,7 @@ export default class KSong extends Vue {
   gameLoop(frame: number) {
     // https://www.youtube.com/watch?v=5hFevwJ4JXI
     const bps = (this.file.header.bpm / 60) * 4;
-    this.currentBeat = Math.floor((bps * frame) / 1000);
+    this.currentBeat = (bps * frame) / 1000;
 
     let currentLine = null;
     let nextLine = null;

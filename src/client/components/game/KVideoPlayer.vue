@@ -3,7 +3,7 @@
     <youtube 
       :video-id="videoId" 
       ref="youtube" 
-      @playing="onPlaying"
+      v-on="$listeners"
       width="100%"
       height="100%"
     ></youtube>
@@ -12,25 +12,30 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import PlayerStates from "youtube-player/dist/constants/PlayerStates";
+import { YouTubePlayer } from 'youtube-player/dist/types';
 
 @Component({
   components: {  },
 })
 export default class KVideoPlayer extends Vue {
 
-  videoId = 'dQw4w9WgXcQ';
+  @Prop({ required: true })
+  readonly videoId!: string;
 
   get player() {
-    return (this.$refs.youtube as any).player;
+    return (this.$refs.youtube as any).player as YouTubePlayer;
   }
 
-  onPlaying(e: Event) {
-    console.log("playing");
-    this.$emit('playing', e);
-  }
 
-  public startVideo() {
-    this.player.playVideo();
+  public async startVideo() {
+    const playerState = await this.player.getPlayerState();
+    if (playerState == PlayerStates.PAUSED) {
+      this.player.playVideo();
+      return;
+    }
+    this.player.seekTo(0, true);
+    this.player.playVideoAt(0);
   }
 
 }

@@ -27,6 +27,11 @@ const routes: Array<RouteConfig> = [
     path: '/:gameId/game',
     name: 'game-singing',
     component: () => import('../views/GameView.vue')
+  },
+  {
+    path: '/:gameId/final',
+    name: 'game-final',
+    component: () => import('../views/GameFinal.vue')
   }
 ]
 

@@ -1155,6 +1155,11 @@
     "@types/webpack-sources" "*"
     source-map "^0.6.0"
 
+"@types/youtube-player@^5.5.3":
+  version "5.5.3"
+  resolved "https://registry.yarnpkg.com/@types/youtube-player/-/youtube-player-5.5.3.tgz#84c450c766e19bda507a37e617e288a8ece3450c"
+  integrity sha512-G9k9Q8fyOwzX4A8DI90WB2viYlpxDazoLZDe37GY9+82JL2OOFhEzz6yUIKEt4klACdx/UUuY0BesD68BVR7SA==
+
 "@typescript-eslint/eslint-plugin@^2.33.0":
   version "2.34.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-2.34.0.tgz#6f8ce8a46c7dea4a6f1d171d2bb8fbae6dac2be9"
@@ -5729,6 +5734,11 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+line-reader@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/line-reader/-/line-reader-0.4.0.tgz#17e44818da0ac335675ba300954f94ef670e66fd"
+  integrity sha1-F+RIGNoKwzVnW6MAlU+U72cOZv0=
+
 lines-and-columns@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
@@ -6878,6 +6888,11 @@ pinkie@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
+
+pitch-analyser@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/pitch-analyser/-/pitch-analyser-1.1.0.tgz#c6f57c099edb7c0a3e0485af24592ddfbe07f9ca"
+  integrity sha512-nkW+cVNcAviSJr41u1n6Syd2/r9O4juDm0UTK4enzbRqG5VXsEPJqt1RBNjOOiHmHIoQiUf9Oq3jJgyUVgIYSA==
 
 pkg-dir@^1.0.0:
   version "1.0.0"
@@ -9735,7 +9750,7 @@ yorkie@^2.0.0:
     normalize-path "^1.0.0"
     strip-indent "^2.0.0"
 
-youtube-player@^5.4.0:
+youtube-player@^5.4.0, youtube-player@^5.5.2:
   version "5.5.2"
   resolved "https://registry.yarnpkg.com/youtube-player/-/youtube-player-5.5.2.tgz#052b86b1eabe21ff331095ffffeae285fa7f7cb5"
   integrity sha512-ZGtsemSpXnDky2AUYWgxjaopgB+shFHgXVpiJFeNB5nWEugpW1KWYDaHKuLqh2b67r24GtP6HoSW5swvf0fFIQ==
