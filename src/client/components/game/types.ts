@@ -25,11 +25,6 @@ export interface TextConfig {
   id?: string | number;
 }
 
-export interface Pitch {
-  note: string; 
-  frequency: number
-}
-
 export interface SungPitch extends ContainerConfig {
   pitch: number;
   hittingNote: UltraStarSyllable | null; // the hitting note

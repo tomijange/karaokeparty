@@ -42,9 +42,10 @@ import KTimeline from "@/client/components/game/KTimeline.vue";
 import KLineText from "@/client/components/game/KLineText.vue";
 import KLine from "@/client/components/game/KLine.vue";
 import KVideoPlayer from '@/client/components/game/KVideoPlayer.vue';
-import { ContainerConfig, Pitch } from "./types";
+import { ContainerConfig } from "./types";
 import PlayerStates from 'youtube-player/dist/constants/PlayerStates';
-import pitchAnalyzer from 'pitch-analyser';
+import pitchAnalyzer, { Pitch } from '@/client/pitch-analyser/';
+import PitchAnalyser from "@/client/pitch-analyser/";
 
 @Component({
   components: { CButton, KLineText, KLine, KVideoPlayer },
@@ -61,12 +62,13 @@ export default class KSong extends Vue {
   currentBeat?: number = 0;
   currentLine: UltraStarLine | null = null;
   nextLine: UltraStarLine | null = null;
-  analyser!: any;
+  analyser!: PitchAnalyser;
   currentPitch: Pitch | null = null;
 
   mounted() {
     this.analyser = new pitchAnalyzer({
-      callback: this.onPitch
+      callback: this.onPitch,
+      interval: 75
     });
     this.startSong();
   }

@@ -36,8 +36,10 @@
 <script lang="ts">
 import { UltraStarLine, UltraStarSyllable } from '@/shared/ultrastar-parser/types';
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
-import { ContainerConfig, Pitch, SungPitch, SyllablePillConfig } from './types';
+import { ContainerConfig, SungPitch, SyllablePillConfig } from './types';
 import { frequencyToPitch } from './helpers';
+import { Pitch } from '@/client/pitch-analyser';
+import { logError } from '@/client/pitch-analyser/helpers';
 
 @Component
 export default class KNote extends Vue {
@@ -52,7 +54,7 @@ export default class KNote extends Vue {
   readonly beat!: number;
 
   @Prop()
-  readonly pitch?: Pitch;
+  readonly pitch!: Pitch | null;
 
   noteConfigs: SyllablePillConfig[] = [];
 
@@ -118,16 +120,16 @@ export default class KNote extends Vue {
         highestPitch = syllable.pitch;
       }
     }
-    lowestPitch -= 2;
-    highestPitch += 2;
+    lowestPitch -= 5;
+    highestPitch += 5;
 
     // in beats
     const lineDuration = this.line.end! - this.line.start!;
-    const pitchDiff = highestPitch - lowestPitch;
+    const pitchDiff = Math.max(highestPitch - lowestPitch, 12);
 
     const lineHeight = height;
 
-    const noteHeight = 20;
+    const noteHeight = 14;
 
 
     function create<T extends ContainerConfig>(config: T, options: { start?: number; end?: number; relativePitch?: number; margin?: number }): T {
@@ -178,11 +180,32 @@ export default class KNote extends Vue {
     if (currentSyllable) {
       const relativeBeat = roundedBeat - this.line.start!;
 
-      
-      const pitch = this.pitch ? Math.round(frequencyToPitch(this.pitch.frequency)) : 0;
-      let singingPitch: number | null = Math.floor(currentSyllable.pitch / 12) * 12 + pitch % 12;
+      let singingPitch: number | null = null;
 
-      if(singingPitch < lowestPitch || singingPitch > highestPitch) {
+      if (this.pitch?.frequency) {
+        const pitch: number | null = frequencyToPitch(Math.round(this.pitch.frequency));
+        if (pitch) {
+          const targetOctave = Math.floor(currentSyllable.pitch / 12);
+          const syllablePitch = currentSyllable.pitch;
+
+          const diffs = [-1,0,1].map(octaveDiff => {
+            return (targetOctave + octaveDiff) * 12 + (pitch % 12) - syllablePitch;
+          });
+          let lowestDiff = diffs[0];  
+          for(const diff of diffs) {
+            if(Math.abs(diff) < Math.abs(lowestDiff)) {
+              lowestDiff = diff;
+            }
+          }
+          if(lowestDiff >= 11){
+            console.log(Math.round(lowestDiff), diffs);
+          }
+
+          singingPitch = syllablePitch + Math.round(lowestDiff);
+        }
+      }
+
+      if(singingPitch && (singingPitch < lowestPitch || singingPitch > highestPitch)) {
         singingPitch = null;
       }
 
@@ -197,7 +220,7 @@ export default class KNote extends Vue {
             closestPitch === null 
             || minEndDistance === null  
           ) || endDistance < minEndDistance
-        if (isNewMin && endDistance < 2) {
+        if (isNewMin && endDistance < 1.1) {
 
             closestPitch = sungPitch;
             minEndDistance = endDistance;

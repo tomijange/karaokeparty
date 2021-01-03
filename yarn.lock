@@ -6889,10 +6889,10 @@ pinkie@^2.0.0:
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
-pitch-analyser@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/pitch-analyser/-/pitch-analyser-1.1.0.tgz#c6f57c099edb7c0a3e0485af24592ddfbe07f9ca"
-  integrity sha512-nkW+cVNcAviSJr41u1n6Syd2/r9O4juDm0UTK4enzbRqG5VXsEPJqt1RBNjOOiHmHIoQiUf9Oq3jJgyUVgIYSA==
+pitchfinder@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/pitchfinder/-/pitchfinder-2.3.1.tgz#b2033b5de43f3067f8a0ad439b9b4a5e10fc5599"
+  integrity sha512-lYZo2J9i6OV769VKGpeEpvotc7GSLS98iP8ZyRurhZZDIpyDt09dBG+Z4+amx8379pQ83AjI9Pde8//4R7Rc1Q==
 
 pkg-dir@^1.0.0:
   version "1.0.0"
