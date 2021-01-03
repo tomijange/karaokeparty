@@ -258,6 +258,17 @@ export default class KNote extends Vue {
         }));
       }
 
+      if (hits) {
+        const score = sungPitches.reduce((prev, curr) => {
+          if (curr.hittingNote) {
+            const duration = curr.end! - curr.start!;
+            return prev + duration * 10;
+          }
+          return prev;
+        }, 0);
+        this.$emit('score', score);
+      }
+
     } 
     this.sungPitches = sungPitches;
     this.noteConfigs = noteConfigs;

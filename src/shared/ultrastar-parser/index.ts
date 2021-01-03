@@ -1,3 +1,4 @@
+import sha1 from "sha1";
 import {
   UltraStarBody,
   UltraStarFile,
@@ -97,5 +98,7 @@ export function parseUltrastarFile(file: string, type: 'header' | 'full' = 'full
     return null;
   }
 
-  return { header, body } as UltraStarFile;
+  const id = sha1(header.title + '-' + header.artist);
+
+  return { header, body, id } as UltraStarFile;
 }

@@ -11,5 +11,6 @@ export enum EventMessages {
   WhoAmI = 'who-am-i', // ask server who i am
   Me = 'me', // get the answer of who am i
   UpdateMe = 'update-me', // updates yourself,
-  StartMatch = 'start-match' // user pressed start button
+  StartMatch = 'start-match', // user pressed start button,
+  SetSong = 'set-song',
 }

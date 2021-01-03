@@ -45,4 +45,5 @@ export interface UltraStarBody {
 export interface UltraStarFile {
   header: UltraStarHeader;
   body: UltraStarBody;
+  id: string | number;
 }

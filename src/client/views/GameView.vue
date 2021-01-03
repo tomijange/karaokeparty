@@ -1,17 +1,23 @@
 <template>
-  <div>
+  <div class="game-view">
     <k-song 
       v-if="currentMatch" 
+      class="flex"
       :file="currentSong" 
       :started="started" 
       @ready="onPlayerReady"
-      @finished="onPlayerFinished"  
+      @finished="onPlayerFinished"
+      @score="onScore"
     >
     </k-song>
     <div v-if="currentMatch">
-    <c-user-list>
-      <c-user-list-item v-for="user in currentMatch.users" :key="user.userId" :user="user"></c-user-list-item>
-    </c-user-list>
+      <c-user-list v-if="sortedUsers">
+        <c-user-list-item 
+          v-for="user in sortedUsers" 
+          :key="user.userId" 
+          :user="user">
+        </c-user-list-item>
+      </c-user-list>
     </div>
   </div>
 </template>
@@ -31,6 +37,16 @@ import CUserList from '@/client/components/CUserList.vue';
   components: { KSong, CUserListItem, CUserList }
 })
 export default class GameView extends Vue {
+
+  onScore(score: number) {
+    if(this.me) {
+      this.me = { ...this.me, score: Math.round(score) };
+    }
+  }
+
+  get sortedUsers() {
+    return this.currentMatch?.users.sort((user1, user2) => user2.score - user1.score);
+  }
 
   get currentSong() {
     return this.currentMatch?.currentSong;
@@ -83,5 +99,11 @@ export default class GameView extends Vue {
 </script>
 
 <style lang="scss" scoped>
+
+.game-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
 </style>

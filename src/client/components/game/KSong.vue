@@ -1,35 +1,38 @@
 <template>
-  <div>
-    {{ this.started }}
-    <div class="game">
-      <div ref="wrapper" class="wrapper" v-resize @resize="handleResize">
-        <transition name="fade">
-          <k-line
-            :line="currentLine"
-            :config="configKonva"
-            :beat="currentBeat"
-            :key="currentLine && currentLine.start"
-            :pitch="currentPitch"
-          >
-          </k-line>
-        </transition>
-        <k-video-player ref="video" @playing="onVideoPlaying" @ended="onVideoEnded" :videoId="videoId"></k-video-player>
-      </div>
-      <div class="texts">
-        <k-line-text
+  <div class="game">
+    <div ref="wrapper" class="wrapper" v-resize @resize="handleResize">
+      <transition name="fade">
+        <k-line
           :line="currentLine"
+          :config="configKonva"
           :beat="currentBeat"
           :key="currentLine && currentLine.start"
+          :pitch="currentPitch"
+          @score="onScore"
         >
-        </k-line-text>
-        <k-line-text
-          :line="nextLine"
-          :beat="currentBeat"
-          :key="nextLine && nextLine.start"
-          :next="true"
-        >
-        </k-line-text>
-      </div>
+        </k-line>
+      </transition>
+      <k-video-player 
+        ref="video" 
+        @playing="onVideoPlaying" 
+        @ended="onVideoEnded" 
+        :videoId="videoId"
+      ></k-video-player>
+    </div>
+    <div class="texts">
+      <k-line-text
+        :line="currentLine"
+        :beat="currentBeat"
+        :key="currentLine && currentLine.start"
+      >
+      </k-line-text>
+      <k-line-text
+        :line="nextLine"
+        :beat="currentBeat"
+        :key="nextLine && nextLine.start"
+        :next="true"
+      >
+      </k-line-text>
     </div>
   </div>
 </template>
@@ -57,6 +60,8 @@ export default class KSong extends Vue {
   @Prop()
   readonly started!: boolean;
 
+  scoreMap: {[key in number]: number} = {};
+
   configKonva: ContainerConfig | null = null;
 
   currentBeat?: number = 0;
@@ -71,6 +76,18 @@ export default class KSong extends Vue {
       interval: 75
     });
     this.startSong();
+  }
+
+  onScore(newScore: number) {
+    if(this.currentLine) {
+      this.scoreMap[this.currentLine.start!] = newScore;
+      const globalScore = Object.values(this.scoreMap).reduce((acc, curr) => acc + curr, 0);
+      this.$emit('score', globalScore);
+    }
+  }
+
+  destroyed() {
+    this.analyser.stopAnalyser();
   }
 
   currentLoop?: (frame: number) => void;
@@ -179,14 +196,15 @@ export default class KSong extends Vue {
 
 <style lang="scss">
 .wrapper {
-  height: 600px;
+  flex-grow: 1;
   width: 100%;
   position: relative;
   z-index: 1;
 }
 
 .game {
-  padding: 64px;
+  display: flex;
+  flex-direction: column;
 }
 
 .texts {

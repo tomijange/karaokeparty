@@ -7,20 +7,26 @@ import {
   commitAddUser,
   commitRemoveUser,
   commitSetCurrentMatch,
-  commitSetError, commitSetMe, commitUpdateUser,
+  commitSetError, commitSetMe, commitSetSongs, commitUpdateUser,
   mutations
 } from "@/client/store/main/mutations";
 import { Match, User } from "@/shared/game/types";
 import router from "@/client/router";
-import socket from "@/client/socket";
+import socket from "@/client/api/socket";
 import { readMe } from "./getters";
+import { api } from "@/client/api";
 const { dispatch } = getStoreAccessors<MainState, RootState>("");
 type MainContext = ActionContext<MainState, RootState>;
 
 
 export const actions = {
+  async getSongs(context: MainContext){
+    const songs = await api.getSongs();
+    commitSetSongs(context, songs);
+  },
   updateMe(context: MainContext, user: User) {
     commitSetMe(context, user);
+    commitUpdateUser(context, user);
     setTimeout(() => readMe(context) === user ? socket.emit(EventMessages.UpdateMe, user) : null, 1000);
   },
   showError(context: MainContext, error: string) {
@@ -51,4 +57,4 @@ export const actions = {
 
 export const dispatchShowError = dispatch(actions.showError);
 export const dispatchUpdateMe = dispatch(actions.updateMe);
-
+export const dispatchGetSongs = dispatch(actions.getSongs);

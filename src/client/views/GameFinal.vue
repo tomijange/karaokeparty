@@ -9,12 +9,14 @@
 
     <c-card v-if="currentMatch" class="mt-10">
       <h2>Die Lobby</h2>
-      <c-user-list>
-        <c-user-list-item v-for="user in currentMatch.users" :key="user.userId" :user="user"></c-user-list-item>
+      <c-user-list v-if="sortedUsers">
+        <c-user-list-item 
+          v-for="user in sortedUsers" 
+          :key="user.userId" 
+          :user="user">
+        </c-user-list-item>
       </c-user-list>
     </c-card>
-
-
   </div>
 </template>
 
@@ -43,6 +45,10 @@ export default class GameFinal extends Vue {
     if (!this.currentMatch) {
       this.$socket.emit(EventMessages.JoinMatch, gameId);
     }
+  }
+
+  get sortedUsers() {
+    return this.currentMatch?.users.sort((user1, user2) => user2.score - user1.score);
   }
 
   startGame() {

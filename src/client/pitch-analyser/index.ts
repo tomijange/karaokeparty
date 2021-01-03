@@ -11,8 +11,8 @@ import {
 
 export interface Pitch {
   frequency: number | null;
-  note?: string;
-  cents?: string | number;
+  note: string | null;
+  cents: string | number | null;
 }
 
 // Default of options
@@ -30,13 +30,11 @@ const defaultOptions = {
 	microphone: true,
 	audioFile: false,
 	returnNote: true,
-	returnCents: false,
-	decimals: 2,
 } as PitchAnaylserOptions;
 
 
 class PitchAnalyser {
-  lastFrequency?: number;
+  lastFrequency?: number | null;
   audioContext?: AudioContext | null;
   audioAnalyser?: AnalyserNode | null;
   audioStream?: MediaStream;
@@ -98,7 +96,7 @@ class PitchAnalyser {
 
   // Get the frequencies and return values based on options
   analysePitch = (frame: number) => {
-    if (this.lastFrame && (frame - this.lastFrame) < (this.options?.interval ||0)) {
+    if (this.lastFrame && (frame - this.lastFrame) < (this.options?.interval || 0)) {
       window.requestAnimationFrame(this.analysePitch);
       return;
     }
@@ -114,25 +112,23 @@ class PitchAnalyser {
 
     const frequency = calculateFrequency(this.frequencies, { rate: this.audioContext?.sampleRate});
 
-    if (frequency) {
-      const { returnCents, returnNote, decimals, callback } = this.options!;
-
+    if (frequency !== this.lastFrequency) {
+      const { returnNote, callback } = this.options!;
+      
       const returnValue = {
-        frequency: toDecimals(frequency, decimals),
+        frequency: null,
       } as Pitch;
 
-      if (returnNote) {
-        const note = calculateNote(frequency);
-        returnValue.note = note;
+      if (frequency) {
+        returnValue.frequency = frequency;
+
+        if (returnNote) {
+          const note = calculateNote(frequency);
+          returnValue.note = note;
+        }
       }
 
-      if (returnNote && returnCents) {
-        if (this.lastFrequency) {
-          const cents = calculateCents(frequency, this.lastFrequency);
-          returnValue.cents = toDecimals(cents, decimals);
-        }
-        this.lastFrequency = frequency;
-      }
+      this.lastFrequency = frequency;
 
       // Execute the callback. (Intended for returning the output)
       callback && callback(returnValue);

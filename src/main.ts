@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './client/App.vue'
-import socket from './client/socket';
+import socket from './client/api/socket';
 
 import router from './client/router'
 import store from './client/store'

@@ -12,6 +12,9 @@ const C0 = Math.round(A4 * Math.pow(2, -4.75)); // 16
 // Changes: function name
 const calculateFrequency = (frequencies: Float32Array, options?: { rate?: number}) => {
 	const pitch = detectPitch({ sampleRate: options?.rate || 22050 / 1024 })(frequencies);
+	if (pitch === -1) {
+		return null;
+	}
 	return pitch;
 };
 
@@ -32,12 +35,15 @@ const calculateCents = (currentFrequency: number, lastFrequency: number) => {
 	return cents;
 };
 
-const calculateNote = (frequency: number) => {
-	const semiTone = calculateSemiTone(frequency);
-	const octave = calculateOctave(semiTone);
-	const notePosition = Math.floor(semiTone % 12);
-	const note = notes[notePosition] + String(octave);
-	return note;
+const calculateNote = (frequency: number | null) => {
+	if (frequency) {
+		const semiTone = calculateSemiTone(frequency);
+		const octave = calculateOctave(semiTone);
+		const notePosition = Math.floor(semiTone % 12);
+		const note = notes[notePosition] + String(octave);
+		return note;
+	}
+	return null;
 };
 
 const toDecimals = (number: number, decimals: number) => {

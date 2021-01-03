@@ -1,13 +1,11 @@
 <template>
-  <div class="avatar pa-4">
-    <div class="avatar-selection m-2">
-        <c-avatar-parts 
-            class="avatar-heads"
-            :avatar-parts="this.heads"
-            v-model="avatar"
-            >
-        </c-avatar-parts>
-    </div>
+  <div class="avatar-selection m-2">
+      <c-avatar-parts 
+          class="avatar-heads"
+          :avatar-parts="this.heads"
+          v-model="avatar"
+          >
+      </c-avatar-parts>
   </div>
 </template>
 

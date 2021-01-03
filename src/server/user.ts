@@ -19,6 +19,7 @@ export default class ServerUser extends User {
       this.state = copyFrom.state;
       this.avatar = copyFrom.avatar;
       this.playerState = copyFrom.playerState;
+      this.score = copyFrom.score;
     }
   }
 

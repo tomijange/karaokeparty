@@ -22,7 +22,7 @@ export default class ServerMatch implements Match {
   public gameId: GameId;
   public users: ServerUser[] = [];
   public state: MatchState = 'voting';
-  public currentSong: UltraStarFile | undefined;
+  public currentSong?: UltraStarFile;
   private removeTaskId?: NodeJS.Timeout;
   public playerState: PlayerState = 'loading';
 
@@ -37,6 +37,11 @@ export default class ServerMatch implements Match {
 
   public setState(newState: MatchState) {
     this.state = newState;
+    this.room.emit(EventMessages.MatchInfo, this);
+  }
+
+  public setSong(song: UltraStarFile) {
+    this.currentSong = song;
     this.room.emit(EventMessages.MatchInfo, this);
   }
 

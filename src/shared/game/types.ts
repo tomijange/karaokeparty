@@ -14,6 +14,7 @@ export class User {
   playerState: PlayerState = 'loading';
   avatar = '🙂';
   type: UserType = 'normal';
+  score = 0;
 
   constructor(public userId: UserId) {}
 }
@@ -24,5 +25,5 @@ export interface Match {
   state: MatchState;
   playerState: PlayerState;
 
-  currentSong: UltraStarFile | undefined;
+  currentSong?: UltraStarFile;
 }

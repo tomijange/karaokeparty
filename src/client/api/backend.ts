@@ -1,6 +1,3 @@
-import SocketIO from 'socket.io-client'
-import chalk from "chalk";
-
 let origin = window.location.origin;
 
 if (origin !== 'http://localhost:8080') {
@@ -11,9 +8,5 @@ if (origin !== 'http://localhost:8080') {
 
 console.log(`%cbackend url: ${origin}`, 'color: red;');
 
-const socket = SocketIO.io(origin, {
-  transports: ['websocket'],
-  path: '/api/socket.io'
-});
-
-export default socket;
+export const API_URL = `${origin}api`
+export { origin as BACKEND_URL }

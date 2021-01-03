@@ -5,6 +5,7 @@ import ServerUser from "@/server/user";
 import debug from "@/server/debug";
 import chalk from "chalk";
 import { User } from "@/shared/game/types";
+import { getSong } from "./songs/fileRepository";
 
 let idCounter = 0;
 
@@ -66,6 +67,21 @@ export default function (socket: Socket) {
       throw Error("user is not a leader");
     }
     match.setState('singing');
+  })
+
+  on(EventMessages.SetSong, (songId: string) => {
+    const match = currentUser.match;
+    if (!match) {
+      throw Error("match not found");
+    }
+    if(currentUser.type !== 'leader') {
+      throw Error("user is not a leader");
+    }
+    const song = getSong(songId);
+    if (!song) {
+      throw Error("song not found");
+    }
+    match.setSong(song);
   })
 
   on('error', (error) => {

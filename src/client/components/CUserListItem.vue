@@ -1,7 +1,10 @@
 <template>
   <li class="user-list-item ma-2">
     <div class="user-avatar mr-2">{{ user.avatar }}</div>
-    <div class="user-name flex">{{ user.name }}</div>
+    <div class="flex d-flex">
+      <div class="user-name">{{ user.name }}</div>
+      <div class="user-score" v-if="user.score">{{ user.score }}</div>
+    </div>
     <div>{{ user.type === 'leader' ? ' 👑' : ''}}</div>
   </li>
 </template>
@@ -30,6 +33,10 @@ export default class CUserListItem extends Vue {
   border-radius: 2px;
   padding: 2px 8px;
   font-size: 1.2rem;
+}
+
+.user-score {
+  margin: 0 8px;
 }
 
 

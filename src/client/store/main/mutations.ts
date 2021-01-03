@@ -2,6 +2,7 @@ import { getStoreAccessors } from 'typesafe-vuex';
 import MainState from "@/client/store/main/state";
 import RootState from "@/client/store/state";
 import { Match, User } from "@/shared/game/types";
+import { UltraStarFile } from '@/shared/ultrastar-parser/types';
 
 export const mutations = {
   setError(state: MainState, payload: string) {
@@ -29,6 +30,9 @@ export const mutations = {
   },
   setMe(state: MainState, user: User | null) {
     state.me = user;
+  },
+  setSongs(state: MainState, songs: UltraStarFile[]){
+    state.songs = songs;
   }
 };
 
@@ -40,3 +44,4 @@ export const commitAddUser = commit(mutations.addUser);
 export const commitRemoveUser = commit(mutations.removeUser);
 export const commitSetMe = commit(mutations.setMe);
 export const commitUpdateUser = commit(mutations.updateUser);
+export const commitSetSongs = commit(mutations.setSongs);

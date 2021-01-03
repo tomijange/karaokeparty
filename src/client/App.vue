@@ -1,13 +1,20 @@
 <template>
   <div class="app">
-    <router-view />
+    <c-app-bar>
+      <h2>Karaokeparty🎤</h2>
+    </c-app-bar>
+    <div class="app-wrapper">
+      <router-view />
+    </div>
   </div>
 </template>
 
 <script>
 import './global.scss';
 import {Component, Vue} from "vue-property-decorator";
-@Component
+import CAppBar from './components/CAppBar.vue';
+
+@Component({ components: { CAppBar } })
 export default class App extends Vue {
 }
 </script>
@@ -27,8 +34,13 @@ body, html {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  padding: 64px 2px;
-  overflow: auto;
-  
+  display: flex;
+  flex-direction: column;
+
+  .app-wrapper {
+    padding: 24px 2px;
+    overflow: auto;
+    flex: 1 0 0;
+  }
 }
 </style>

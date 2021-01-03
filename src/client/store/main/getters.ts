@@ -13,9 +13,13 @@ export const getters = {
   },
   getMe(state: MainState) {
     return state.me;
+  },
+  getSongs(state: MainState) {
+    return state.songs;
   }
 };
 
 export const readError = read(getters.getError);
 export const readCurrentMatch = read(getters.getCurrentMatch);
 export const readMe = read(getters.getMe);
+export const readSongs = read(getters.getSongs);
