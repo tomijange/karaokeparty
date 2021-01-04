@@ -1,10 +1,12 @@
 <template>
-  <div class="game-lobby">
+  <div class="game-final">
     <c-card v-if="error">
       {{ error }}
     </c-card>
     <c-card v-if="currentMatch" class="flex">
       <h2>Ende</h2>
+      <c-button @click="onRestart" v-if="isLeader && !nextGameId">Neues Spiel</c-button>
+      <c-button @click="onJoinNext" v-else-if="nextGameId">Neues Spiel beitreten</c-button>
     </c-card>
 
     <c-card v-if="currentMatch" class="mt-10">
@@ -46,13 +48,21 @@ export default class GameFinal extends Vue {
       this.$socket.emit(EventMessages.JoinMatch, gameId);
     }
   }
+  
+  get nextGameId() {
+    return this.currentMatch?.nextGameId;
+  }
+
+  onJoinNext() {
+    this.$socket.emit(EventMessages.JoinMatch, this.nextGameId);
+  }
+
+  onRestart() {
+    this.$socket.emit(EventMessages.RestartLobby, '');
+  }
 
   get sortedUsers() {
     return this.currentMatch?.users.sort((user1, user2) => user2.score - user1.score);
-  }
-
-  startGame() {
-    this.$socket.emit(EventMessages.StartMatch, '');
   }
 
   get error() {
@@ -65,21 +75,6 @@ export default class GameFinal extends Vue {
 
   get isLeader() {
     return this.me?.type === 'leader';
-  }
-
-  get name() {
-    return this.me?.name || '';
-  }
-
-  set name(value) {
-    if (!value) {
-      return;
-    }
-    value = value.replace(/\W/g, '');
-
-    if (this.me) {
-      this.me = {...this.me, name: value || ''};
-    }
   }
 
   get me() {
@@ -97,7 +92,7 @@ export default class GameFinal extends Vue {
 
 <style lang="scss">
 
-.game-lobby {
+.game-final {
   margin: 0 auto;
   max-width: 800px;
 }

@@ -23,6 +23,12 @@ export default class ServerUser extends User {
     }
   }
 
+  public reset() {
+    this.state = 'new';
+    this.playerState = 'loading';
+    this.score = 0;
+  }
+
 
   public toJSON() {
     const { match, socket, ...other } = this;

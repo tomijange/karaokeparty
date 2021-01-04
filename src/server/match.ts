@@ -7,6 +7,7 @@ import { gameHandler } from "@/server/gameHandler";
 import debug from "@/server/debug";
 import { UltraStarFile } from "@/shared/ultrastar-parser/types";
 import { songs } from './songs/fileRepository';
+import { times } from "underscore";
 
 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
 
@@ -25,6 +26,7 @@ export default class ServerMatch implements Match {
   public currentSong?: UltraStarFile;
   private removeTaskId?: NodeJS.Timeout;
   public playerState: PlayerState = 'loading';
+  public nextGameId?: GameId;
 
   constructor() {
     this.gameId = generateGameId();
@@ -42,6 +44,13 @@ export default class ServerMatch implements Match {
 
   public setSong(song: UltraStarFile) {
     this.currentSong = song;
+    this.room.emit(EventMessages.MatchInfo, this);
+  }
+
+  public createAfterParty(user: ServerUser) {
+    const newMatch = gameHandler.createMatch();
+    newMatch.joinUser(user);
+    this.nextGameId = newMatch.gameId;
     this.room.emit(EventMessages.MatchInfo, this);
   }
 
@@ -109,6 +118,8 @@ export default class ServerMatch implements Match {
     // leave from room
     user.socket.leave(this.gameId);
 
+    user.reset();
+
     if(!this.users.length) {
       this.checkEmpty();
     } else {
@@ -116,7 +127,6 @@ export default class ServerMatch implements Match {
       newLeader.type = 'leader';
       newLeader.socket.emit(EventMessages.Me, newLeader);
       this.room.emit(EventMessages.UserUpdated, newLeader);
-
     }
   }
 

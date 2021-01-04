@@ -26,4 +26,5 @@ export interface Match {
   playerState: PlayerState;
 
   currentSong?: UltraStarFile;
+  nextGameId?: GameId;
 }
