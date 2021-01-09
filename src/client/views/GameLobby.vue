@@ -9,6 +9,12 @@
         <h2>Die Lobby</h2>
         <div class="start" v-if="isLeader">
           <c-button color="#607D8B" class="ma-4" @click="startGame" :disabled="!currentSongId">Start 🎤</c-button>
+
+          <input 
+            id="number"
+            type="number"
+            step=".1"
+            v-model="difficulty" />
         </div>
       </div>
       <div class="flex">
@@ -120,6 +126,14 @@ export default class GameLobby extends Vue {
 
   startGame() {
     this.$socket.emit(EventMessages.StartMatch, '');
+  }
+
+  get difficulty() {
+    return this.currentMatch?.difficulty || 1;
+  }
+
+  set difficulty(difficulty: number) {
+    this.$socket.emit(EventMessages.SetDifficulty, difficulty);
   }
 
   get currentSongId() {

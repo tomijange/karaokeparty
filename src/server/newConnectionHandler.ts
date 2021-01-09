@@ -84,6 +84,17 @@ export default function (socket: Socket) {
     match.setSong(song);
   })
 
+  on(EventMessages.SetDifficulty, (difficulty: number) => {
+    const match = currentUser.match;
+    if (!match) {
+      throw Error("match not found");
+    }
+    if(currentUser.type !== 'leader') {
+      throw Error("user is not a leader");
+    }
+    match.setDifficulty(difficulty);
+  })
+
   on(EventMessages.RestartLobby, () => {
     const match = currentUser.match;
     if (!match) {

@@ -59,12 +59,34 @@ export function parseUltrastarFile(file: string, type: 'header' | 'full' = 'full
     }
     if (entryType === UltraStarType.End) {
       const lastSyllable = currentLine.syllables[currentLine.syllables.length -1];
+      currentLine.syllableEnd = lastSyllable.start + lastSyllable.duration;
       currentLine.end = lastSyllable.start + lastSyllable.duration;
       return;
     }
     if (entryType === UltraStarType.Linebreak) {
-      currentLine.end = +line.substring(line.indexOf(' '));
+      const oldLine = currentLine;
+      const lastSyllable = oldLine.syllables[oldLine.syllables.length -1];
+      oldLine.syllableEnd = lastSyllable.start + lastSyllable.duration;
+
+
       currentLine = { syllables: [] };
+
+      const firstNodeIndex = line.indexOf(' ');
+      const secondNodeIndex = line.indexOf(' ', firstNodeIndex+1);
+
+      if (secondNodeIndex !== -1) {
+        const firstValue = +line.substring(firstNodeIndex, secondNodeIndex);
+        const secondValue = +line.substring(secondNodeIndex);
+
+        oldLine.end = firstValue;
+        currentLine.start = secondValue;
+      } else {
+        const firstValue = +line.substring(firstNodeIndex);
+        currentLine.start = firstValue;
+        oldLine.end = lastSyllable.start + lastSyllable.duration;
+      }
+      
+      
       body.lines.push(currentLine);
       return;
     }
@@ -87,8 +109,8 @@ export function parseUltrastarFile(file: string, type: 'header' | 'full' = 'full
     };
 
 
-    if(currentLine.start === undefined) {
-      currentLine.start = syllable.start;
+    if(currentLine.syllableStart === undefined) {
+      currentLine.syllableStart = syllable.start;
     }
 
     currentLine.syllables.push(syllable);

@@ -27,6 +27,7 @@ export default class ServerMatch implements Match {
   private removeTaskId?: NodeJS.Timeout;
   public playerState: PlayerState = 'loading';
   public nextGameId?: GameId;
+  public difficulty: number = 1;
 
   constructor() {
     this.gameId = generateGameId();
@@ -44,6 +45,11 @@ export default class ServerMatch implements Match {
 
   public setSong(song: UltraStarFile) {
     this.currentSong = song;
+    this.room.emit(EventMessages.MatchInfo, this);
+  }
+
+  public setDifficulty(difficulty: number) {
+    this.difficulty = difficulty;
     this.room.emit(EventMessages.MatchInfo, this);
   }
 

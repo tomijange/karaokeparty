@@ -14,4 +14,5 @@ export enum EventMessages {
   StartMatch = 'start-match', // user pressed start button,
   SetSong = 'set-song',
   RestartLobby = 'restart-lobby',
+  SetDifficulty = 'set-difficulty',
 }

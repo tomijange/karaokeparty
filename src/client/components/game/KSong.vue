@@ -8,6 +8,7 @@
           :beat="currentBeat"
           :key="currentLine && currentLine.start"
           :pitch="currentPitch"
+          :maxPitchDiff="difficulty"
           @score="onScore"
         >
         </k-line>
@@ -59,6 +60,9 @@ export default class KSong extends Vue {
 
   @Prop()
   readonly started!: boolean;
+
+  @Prop()
+  readonly difficulty!: number;
 
   scoreMap: {[key in number]: number} = {};
 
@@ -200,6 +204,7 @@ export default class KSong extends Vue {
   width: 100%;
   position: relative;
   z-index: 1;
+  overflow: hidden;
 }
 
 .game {

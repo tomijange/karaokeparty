@@ -34,8 +34,12 @@ export interface UltraStarSyllable {
 
 export interface UltraStarLine {
   syllables: UltraStarSyllable[];
+  // start and end values for when the line starts and ends
   start?: number;
   end?: number;
+  // start and end of first and last syllable
+  syllableStart?: number;
+  syllableEnd?: number;
 }
 
 export interface UltraStarBody {

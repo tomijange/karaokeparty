@@ -4,7 +4,8 @@
       v-if="currentMatch" 
       class="flex"
       :file="currentSong" 
-      :started="started" 
+      :started="started"
+      :difficulty="difficulty"
       @ready="onPlayerReady"
       @finished="onPlayerFinished"
       @score="onScore"
@@ -50,6 +51,10 @@ export default class GameView extends Vue {
 
   get currentSong() {
     return this.currentMatch?.currentSong;
+  }
+
+  get difficulty() {
+    return this.currentMatch?.difficulty;
   }
 
   get started() {
@@ -104,6 +109,7 @@ export default class GameView extends Vue {
   height: 100%;
   display: flex;
   flex-direction: column;
+  padding: 16px 8px;
 }
 
 </style>

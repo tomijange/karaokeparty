@@ -24,6 +24,7 @@ export interface Match {
   users: User[];
   state: MatchState;
   playerState: PlayerState;
+  difficulty: number;
 
   currentSong?: UltraStarFile;
   nextGameId?: GameId;
